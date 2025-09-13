@@ -1,10 +1,11 @@
 import argparse
-from collections import Counter
 from colorama import Fore, Style
 from chardet.universaldetector import UniversalDetector
 import magic
 import math
 import os
+
+alphabet = "абвгдежзийклмнопрстуфхцчшщыьэюя"
 
 def print_error(error: str):
     print(Fore.RED + error + Style.RESET_ALL)
@@ -12,19 +13,39 @@ def print_error(error: str):
 def calc_entropy(frequencies:list[float]) -> float:
 	entropy = 0
 	for frequency in frequencies:
-		entropy -= frequency * math.log2(frequency)
-	return entropy
+		if frequency > 0:
+			entropy -= frequency * math.log2(frequency)
+	return entropy	
 
 def process_text(content:str):
-	#TODO filter text (e.g. remove numbers, special chars, make all lowercase)
-    buffer = content
-    buffer.replace('\n', '')
-    n = len(buffer)
-    print(f"{Fore.LIGHTGREEN_EX}Text length:{Fore.LIGHTBLUE_EX} {n}{Style.RESET_ALL}")
-    monogram_counts = Counter(buffer)
-    bigrams_with_overlapping_counts = Counter(buffer[index:index+2] for index in range(0, n-1))
-	#TODO do not forget about bigrams with overlapping
-
+	print(f"{Fore.LIGHTGREEN_EX}Text length:{Fore.LIGHTBLUE_EX} {len(content)}{Style.RESET_ALL}")
+	buffer = content.lower()
+	prev_ch = None
+	monograms_amount = 0
+	monograms_count = {c: 0 for c in alphabet}
+	not_overlapped_bigrams_count = {c1+c2:0 for c1 in alphabet for c2 in alphabet}
+	overlapping_bigrams_count = not_overlapped_bigrams_count.copy()
+	for ch in buffer:
+		temp_ch = ch
+		if ch not in alphabet:
+			if ch == "ё":
+				temp_ch = "е"
+			elif ch == "ъ":
+				temp_ch = "ь"
+			else:
+				continue
+		monograms_count[temp_ch] += 1
+		monograms_amount += 1
+		if monograms_amount % 2 == 0:
+			not_overlapped_bigrams_count[prev_ch+temp_ch] += 1
+		if prev_ch is not None:
+			overlapping_bigrams_count[prev_ch+temp_ch] += 1
+		prev_ch = temp_ch
+	print(monograms_amount)
+	print(monograms_count)
+	print(not_overlapped_bigrams_count)
+	print(overlapping_bigrams_count)
+	
 
 if __name__ == "__main__":
 	description = Fore.LIGHTBLUE_EX + r"""
