@@ -12,8 +12,11 @@ alphabet = "абвгдежзийклмнопрстуфхцчшщыьэюя"
 def print_error(error: str):
     print(Fore.RED + error + Style.RESET_ALL)
 
-def print_table(frame):
+def print_df(frame):
     print(Fore.LIGHTCYAN_EX + tabulate(frame, headers='keys', tablefmt="heavy_grid", showindex=True) + Style.RESET_ALL)
+
+def print_green_blue_colored_pair(tag, value, indentation=''):
+    print(indentation + Fore.LIGHTGREEN_EX + tag + " " + Fore.LIGHTBLUE_EX + str(value) + Style.RESET_ALL)
 
 def monogram_occurences(text:str,include_ws:bool) -> tuple[dict[str, int], int]:
 	prev_ch = None
@@ -76,11 +79,15 @@ def bigram_stat_dict_to_dataframe(bigram_count: dict[str,int]) -> pd.DataFrame:
     df = pd.DataFrame(data, index=letters)
     return df.T
 
+
 def process_text(text:str):
-	print(f"{Fore.LIGHTGREEN_EX}Text length:{Fore.LIGHTBLUE_EX} {len(text)}{Style.RESET_ALL}")
+	print_green_blue_colored_pair("Text length:", len(text))
 
 	# prepare text
 	filtered_text = text.strip().lower().replace("ё","е").replace("ъ","ь")
+
+	# ngram counts and frequencies will be saved in different sheets of xlsx file
+	writer = pd.ExcelWriter('lab_results.xlsx',engine='xlsxwriter')   
 
 	# count monograms
 	(monogram_occurences_without_ws, monogram_total) = monogram_occurences(filtered_text, False)
@@ -88,11 +95,15 @@ def process_text(text:str):
 
 	# count bigrams without overlapping
 	(not_overlapped_bigrams_occurences, not_overlapped_bigrams_total) = bigram_occurences(filtered_text, False, False)
+	bigram_stat_dict_to_dataframe(not_overlapped_bigrams_occurences).to_excel(writer,sheet_name="CO_BG_NOT_OV")
 	(not_overlapped_bigrams_occurences_ws, not_overlapped_bigrams_total_ws) = bigram_occurences(filtered_text, True, False)
+	bigram_stat_dict_to_dataframe(not_overlapped_bigrams_occurences_ws).to_excel(writer,sheet_name="CO_BG_NOT_OV_WS")
 
 	# count bigrams with overlapping
 	(overlapping_bigrams_occurences, overlapping_bigrams_total) = bigram_occurences(filtered_text, False, True)
+	bigram_stat_dict_to_dataframe(overlapping_bigrams_occurences).to_excel(writer,sheet_name="CO_BG_OV")
 	(overlapping_bigrams_occurences_ws, overlapping_bigrams_total_ws) = bigram_occurences(filtered_text, True, True)
+	bigram_stat_dict_to_dataframe(overlapping_bigrams_occurences_ws).to_excel(writer,sheet_name="CO_BG_OV_WS")
 
 	# calculate monogram frequencies
 	monogram_frequencies = calculate_ngram_frequencies(monogram_occurences_without_ws, monogram_total)
@@ -100,23 +111,36 @@ def process_text(text:str):
 
 	# calculate bigrams without overlapping frequencies
 	not_overlapped_bigrams_frequencies = calculate_ngram_frequencies(not_overlapped_bigrams_occurences, not_overlapped_bigrams_total)
+	bigram_stat_dict_to_dataframe(not_overlapped_bigrams_frequencies).to_excel(writer,sheet_name="BG_FR_NOT_OV")
 	not_overlapped_bigrams_frequencies_ws = calculate_ngram_frequencies(not_overlapped_bigrams_occurences_ws, not_overlapped_bigrams_total_ws)
+	bigram_stat_dict_to_dataframe(not_overlapped_bigrams_frequencies_ws).to_excel(writer,sheet_name="BG_FR_NOT_OV_WS")
 
 	# calculate bigrams with overlapping frequencies
 	overlapping_bigrams_frequencies = calculate_ngram_frequencies(overlapping_bigrams_occurences, overlapping_bigrams_total)
+	bigram_stat_dict_to_dataframe(overlapping_bigrams_frequencies).to_excel(writer,sheet_name="BG_FR_OV")
 	overlapping_bigrams_frequencies_ws = calculate_ngram_frequencies(overlapping_bigrams_occurences_ws, overlapping_bigrams_total_ws)
+	bigram_stat_dict_to_dataframe(overlapping_bigrams_frequencies_ws).to_excel(writer,sheet_name="BG_FR_OV_WS")
+
+	# close writer
+	writer.close()
 
 	# calculate entropy via monogram frequencies
 	entropy_via_monogram_frequencies = calc_entropy(monogram_frequencies)
+	print_green_blue_colored_pair("H1", entropy_via_monogram_frequencies)
 	entropy_via_monogram_frequencies_ws = calc_entropy(monogram_frequencies_ws)
+	print_green_blue_colored_pair("H1 with ws", entropy_via_monogram_frequencies_ws)
 
 	# calculate entropy via not overlapped frequencies
 	entropy_via_not_overlapped_bigrams_frequencies = calc_entropy(not_overlapped_bigrams_frequencies)
+	print_green_blue_colored_pair("H2 not overlapped", entropy_via_not_overlapped_bigrams_frequencies)
 	entropy_via_not_overlapped_bigrams_frequencies_ws = calc_entropy(not_overlapped_bigrams_frequencies_ws)
+	print_green_blue_colored_pair("H2 not overlapped with ws", entropy_via_not_overlapped_bigrams_frequencies_ws)
 
 	# calculate entropy via overlapping frequencies
 	entropy_via_overlapping_bigrams_frequencies = calc_entropy(overlapping_bigrams_frequencies)
+	print_green_blue_colored_pair("H2 overlapping", entropy_via_overlapping_bigrams_frequencies)
 	entropy_via_overlapping_bigrams_frequencies_ws = calc_entropy(overlapping_bigrams_frequencies_ws)
+	print_green_blue_colored_pair("H2 overlapping with ws", entropy_via_overlapping_bigrams_frequencies_ws)
 	
 
 if __name__ == "__main__":
@@ -138,7 +162,7 @@ if __name__ == "__main__":
 	else:
 		print(Fore.LIGHTGREEN_EX + 35*"==" + "\n" + 35*"==" + Style.RESET_ALL)
 		file_type = magic.from_file(args.file,mime=True)
-		print(f"{Fore.LIGHTGREEN_EX}File type of {file_path}:{Fore.LIGHTBLUE_EX} {file_type}{Style.RESET_ALL}")
+		print_green_blue_colored_pair(f"File type of {file_path}:", file_type)
 		if "text" not in file_type:
 			print_error("Please, provide text file")
 		else:
@@ -150,7 +174,7 @@ if __name__ == "__main__":
 					detector.close()
 			detection_result = detector.result
 			if detection_result:
-				print(f"{Fore.LIGHTGREEN_EX}Encoding detection result:{Fore.LIGHTBLUE_EX} {detection_result}{Style.RESET_ALL}")
+				print_green_blue_colored_pair("Encoding detection result:", detection_result)
 				with open(file_path, encoding=detector.result['encoding']) as f:
 					content = f.read()
 					process_text(content)
