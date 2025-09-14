@@ -1,14 +1,19 @@
 import argparse
 from colorama import Fore, Style
 from chardet.universaldetector import UniversalDetector
+from tabulate import tabulate
 import magic
 import math
+import pandas as pd
 import os
 
 alphabet = "абвгдежзийклмнопрстуфхцчшщыьэюя"
 
 def print_error(error: str):
     print(Fore.RED + error + Style.RESET_ALL)
+
+def print_table(frame):
+    print(Fore.LIGHTCYAN_EX + tabulate(frame, headers='keys', tablefmt="heavy_grid", showindex=True) + Style.RESET_ALL)
 
 def calc_entropy(frequencies:list[float]) -> float:
 	entropy = 0
@@ -17,34 +22,68 @@ def calc_entropy(frequencies:list[float]) -> float:
 			entropy -= frequency * math.log2(frequency)
 	return entropy	
 
-def process_text(content:str):
-	print(f"{Fore.LIGHTGREEN_EX}Text length:{Fore.LIGHTBLUE_EX} {len(content)}{Style.RESET_ALL}")
-	buffer = content.lower()
+
+def monogram_occurences(text:str,include_ws:bool) -> tuple[dict[str, int], int]:
 	prev_ch = None
-	monograms_amount = 0
-	monograms_count = {c: 0 for c in alphabet}
-	not_overlapped_bigrams_count = {c1+c2:0 for c1 in alphabet for c2 in alphabet}
-	overlapping_bigrams_count = not_overlapped_bigrams_count.copy()
-	for ch in buffer:
+	total = 0
+	monograms_count = {c: 0 for c in alphabet + (" " if include_ws else "")}
+	for ch in text:
 		temp_ch = ch
 		if ch not in alphabet:
-			if ch == "ё":
-				temp_ch = "е"
-			elif ch == "ъ":
-				temp_ch = "ь"
-			else:
+			if not include_ws or prev_ch == " ":
 				continue
+			temp_ch = " "
 		monograms_count[temp_ch] += 1
-		monograms_amount += 1
-		if monograms_amount % 2 == 0:
-			not_overlapped_bigrams_count[prev_ch+temp_ch] += 1
-		if prev_ch is not None:
-			overlapping_bigrams_count[prev_ch+temp_ch] += 1
+		total += 1
 		prev_ch = temp_ch
-	print(monograms_amount)
-	print(monograms_count)
-	print(not_overlapped_bigrams_count)
-	print(overlapping_bigrams_count)
+	return (monograms_count, total)
+
+
+def bigram_occurences(text:str,include_ws:bool, overlapped: bool) -> tuple[dict[str, int], int]:
+	temp_alphabet = alphabet + (" " if include_ws else "")
+	bigram_count = {c1+c2:0 for c1 in temp_alphabet for c2 in temp_alphabet}
+	# TODO think about what to do with double ws
+	# if include_ws:
+	# 	del bigram_count["  "]
+	total = 0
+	prev_ch = None
+	index = 0
+	for ch in text:
+		temp_ch = ch
+		if ch not in alphabet:
+			if not include_ws or prev_ch == " ":
+				continue
+			temp_ch = " "	
+		if prev_ch is not None and (overlapped or index % 2 == 1):
+			bigram_count[prev_ch+temp_ch] += 1
+			total += 1
+		prev_ch = temp_ch
+		index += 1
+	return (bigram_count, total)
+
+
+def bigram_stat_dict_to_dataframe(bigram_count: dict[str,int]) -> pd.DataFrame:
+    letters = sorted({letter for bigram in bigram_count.keys() for letter in bigram})
+    data = {c1: [bigram_count[c1+c2] for c2 in letters] for c1 in letters}
+    df = pd.DataFrame(data, index=letters)
+    return df.T
+
+def process_text(text:str):
+	print(f"{Fore.LIGHTGREEN_EX}Text length:{Fore.LIGHTBLUE_EX} {len(text)}{Style.RESET_ALL}")
+	filtered_text = text.strip().lower().replace("ё","е").replace("ъ","ь")
+
+	(monogram_occurences_without_ws, monogram_total) = monogram_occurences(filtered_text, False)
+	(monogram_occurences_ws, monogram_total_ws) = monogram_occurences(filtered_text, True)
+
+	(not_overlapped_bigrams_occurences, not_overlapped_bigrams_total) = bigram_occurences(filtered_text, False, False)
+	(not_overlapped_bigrams_occurences_ws, not_overlapped_bigrams_total_ws) = bigram_occurences(filtered_text, True, False)
+
+	(overlapping_bigrams_occurences, overlapping_bigrams_total) = bigram_occurences(filtered_text, False, True)
+	(overlapping_bigrams_occurences_ws, overlapping_bigrams_total_ws) = bigram_occurences(filtered_text, True, True)
+
+	print_table(bigram_stat_dict_to_dataframe(not_overlapped_bigrams_occurences))
+	print_table(bigram_stat_dict_to_dataframe(not_overlapped_bigrams_occurences_ws))
+	
 	
 
 if __name__ == "__main__":
@@ -78,7 +117,6 @@ if __name__ == "__main__":
 					detector.close()
 			detection_result = detector.result
 			if detection_result:
-				#TODO it would be better to warn about low confidence
 				print(f"{Fore.LIGHTGREEN_EX}Encoding detection result:{Fore.LIGHTBLUE_EX} {detection_result}{Style.RESET_ALL}")
 				with open(file_path, encoding=detector.result['encoding']) as f:
 					content = f.read()
