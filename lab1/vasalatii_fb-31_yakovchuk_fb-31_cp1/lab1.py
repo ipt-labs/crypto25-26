@@ -12,8 +12,16 @@ alphabet = "абвгдежзийклмнопрстуфхцчшщыьэюя"
 def print_error(error: str):
     print(Fore.RED + error + Style.RESET_ALL)
 
-def print_df(frame):
-    print(Fore.LIGHTCYAN_EX + tabulate(frame, headers='keys', tablefmt="heavy_grid", showindex=True) + Style.RESET_ALL)
+
+def print_df(frame, title=None):
+    table_str = tabulate(frame, headers='keys', tablefmt="heavy_grid", showindex=True)
+    table_width = max(len(line) for line in table_str.splitlines())
+
+    if title:
+        print(Fore.LIGHTGREEN_EX + title.center(table_width) + Style.RESET_ALL)
+
+    print(Fore.LIGHTCYAN_EX + table_str + Style.RESET_ALL)
+
 
 def print_green_blue_colored_pair(tag, value, indentation=''):
     print(indentation + Fore.LIGHTGREEN_EX + tag + " " + Fore.LIGHTBLUE_EX + str(value) + Style.RESET_ALL)
@@ -91,7 +99,9 @@ def process_text(text:str):
 
 	# count monograms
 	(monogram_occurences_without_ws, monogram_total) = monogram_occurences(filtered_text, False)
+	pd.DataFrame(monogram_occurences_without_ws.items(),columns=["Monogram","Count"], index=None).to_excel(writer, sheet_name="CO_MG", index=False)
 	(monogram_occurences_ws, monogram_total_ws) = monogram_occurences(filtered_text, True)
+	pd.DataFrame(monogram_occurences_ws.items(),columns=["Monogram","Count"], index=None).to_excel(writer, sheet_name="CO_MG_WS", index=False)
 
 	# count bigrams without overlapping
 	(not_overlapped_bigrams_occurences, not_overlapped_bigrams_total) = bigram_occurences(filtered_text, False, False)
@@ -107,7 +117,9 @@ def process_text(text:str):
 
 	# calculate monogram frequencies
 	monogram_frequencies = calculate_ngram_frequencies(monogram_occurences_without_ws, monogram_total)
+	pd.DataFrame(monogram_frequencies.items(),columns=["Frequency","Count"]).to_excel(writer, sheet_name="MG_FR", index=False)
 	monogram_frequencies_ws = calculate_ngram_frequencies(monogram_occurences_ws, monogram_total_ws)
+	pd.DataFrame(monogram_frequencies_ws.items(),columns=["Frequency","Count"]).to_excel(writer, sheet_name="MG_FR_WS", index=False)
 
 	# calculate bigrams without overlapping frequencies
 	not_overlapped_bigrams_frequencies = calculate_ngram_frequencies(not_overlapped_bigrams_occurences, not_overlapped_bigrams_total)
