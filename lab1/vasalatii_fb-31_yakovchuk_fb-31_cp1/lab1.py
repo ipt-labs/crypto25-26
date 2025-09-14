@@ -15,14 +15,6 @@ def print_error(error: str):
 def print_table(frame):
     print(Fore.LIGHTCYAN_EX + tabulate(frame, headers='keys', tablefmt="heavy_grid", showindex=True) + Style.RESET_ALL)
 
-def calc_entropy(frequencies:list[float]) -> float:
-	entropy = 0
-	for frequency in frequencies:
-		if frequency > 0:
-			entropy -= frequency * math.log2(frequency)
-	return entropy	
-
-
 def monogram_occurences(text:str,include_ws:bool) -> tuple[dict[str, int], int]:
 	prev_ch = None
 	total = 0
@@ -62,6 +54,22 @@ def bigram_occurences(text:str,include_ws:bool, overlapped: bool) -> tuple[dict[
 	return (bigram_count, total)
 
 
+def calculate_ngram_frequencies(ngrams_count: dict[str, int], ngrams_total: int) -> dict[str, float]:
+	frequencies = ngrams_count.copy()
+	for ngram in ngrams_count:
+		frequencies[ngram] /= ngrams_total 
+	return frequencies
+
+
+def calc_entropy(frequencies:dict[str, float]) -> float:
+	entropy = 0
+	for bigram in frequencies:
+		frequency = frequencies[bigram]
+		if frequency > 0:
+			entropy -= frequency * math.log2(frequency)
+	return entropy	
+
+
 def bigram_stat_dict_to_dataframe(bigram_count: dict[str,int]) -> pd.DataFrame:
     letters = sorted({letter for bigram in bigram_count.keys() for letter in bigram})
     data = {c1: [bigram_count[c1+c2] for c2 in letters] for c1 in letters}
@@ -70,20 +78,45 @@ def bigram_stat_dict_to_dataframe(bigram_count: dict[str,int]) -> pd.DataFrame:
 
 def process_text(text:str):
 	print(f"{Fore.LIGHTGREEN_EX}Text length:{Fore.LIGHTBLUE_EX} {len(text)}{Style.RESET_ALL}")
+
+	# prepare text
 	filtered_text = text.strip().lower().replace("ё","е").replace("ъ","ь")
 
+	# count monograms
 	(monogram_occurences_without_ws, monogram_total) = monogram_occurences(filtered_text, False)
 	(monogram_occurences_ws, monogram_total_ws) = monogram_occurences(filtered_text, True)
 
+	# count bigrams without overlapping
 	(not_overlapped_bigrams_occurences, not_overlapped_bigrams_total) = bigram_occurences(filtered_text, False, False)
 	(not_overlapped_bigrams_occurences_ws, not_overlapped_bigrams_total_ws) = bigram_occurences(filtered_text, True, False)
 
+	# count bigrams with overlapping
 	(overlapping_bigrams_occurences, overlapping_bigrams_total) = bigram_occurences(filtered_text, False, True)
 	(overlapping_bigrams_occurences_ws, overlapping_bigrams_total_ws) = bigram_occurences(filtered_text, True, True)
 
-	print_table(bigram_stat_dict_to_dataframe(not_overlapped_bigrams_occurences))
-	print_table(bigram_stat_dict_to_dataframe(not_overlapped_bigrams_occurences_ws))
-	
+	# calculate monogram frequencies
+	monogram_frequencies = calculate_ngram_frequencies(monogram_occurences_without_ws, monogram_total)
+	monogram_frequencies_ws = calculate_ngram_frequencies(monogram_occurences_ws, monogram_total_ws)
+
+	# calculate bigrams without overlapping frequencies
+	not_overlapped_bigrams_frequencies = calculate_ngram_frequencies(not_overlapped_bigrams_occurences, not_overlapped_bigrams_total)
+	not_overlapped_bigrams_frequencies_ws = calculate_ngram_frequencies(not_overlapped_bigrams_occurences_ws, not_overlapped_bigrams_total_ws)
+
+	# calculate bigrams with overlapping frequencies
+	overlapping_bigrams_frequencies = calculate_ngram_frequencies(overlapping_bigrams_occurences, overlapping_bigrams_total)
+	overlapping_bigrams_frequencies_ws = calculate_ngram_frequencies(overlapping_bigrams_occurences_ws, overlapping_bigrams_total_ws)
+
+	# calculate entropy via monogram frequencies
+	entropy_via_monogram_frequencies = calc_entropy(monogram_frequencies)
+	entropy_via_monogram_frequencies_ws = calc_entropy(monogram_frequencies_ws)
+
+	# calculate entropy via not overlapped frequencies
+	entropy_via_not_overlapped_bigrams_frequencies = calc_entropy(not_overlapped_bigrams_frequencies)
+	entropy_via_not_overlapped_bigrams_frequencies_ws = calc_entropy(not_overlapped_bigrams_frequencies_ws)
+
+	# calculate entropy via overlapping frequencies
+	entropy_via_overlapping_bigrams_frequencies = calc_entropy(overlapping_bigrams_frequencies)
+	entropy_via_overlapping_bigrams_frequencies_ws = calc_entropy(overlapping_bigrams_frequencies_ws)
 	
 
 if __name__ == "__main__":
