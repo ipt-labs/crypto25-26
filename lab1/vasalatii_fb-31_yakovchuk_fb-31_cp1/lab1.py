@@ -45,9 +45,6 @@ def monogram_occurences(text:str,include_ws:bool) -> tuple[dict[str, int], int]:
 def bigram_occurences(text:str,include_ws:bool, overlapped: bool) -> tuple[dict[str, int], int]:
 	temp_alphabet = alphabet + (" " if include_ws else "")
 	bigram_count = {c1+c2:0 for c1 in temp_alphabet for c2 in temp_alphabet}
-	# TODO think about what to do with double ws
-	# if include_ws:
-	# 	del bigram_count["  "]
 	total = 0
 	prev_ch = None
 	index = 0
@@ -135,24 +132,25 @@ def process_text(text:str):
 
 	# close writer
 	writer.close()
+	print_green_blue_colored_pair(f"Monograms and bigrams stats were saved to",os.path.join(os.getcwd(),'lab_results.xlsx'))
 
 	# calculate entropy via monogram frequencies
 	entropy_via_monogram_frequencies = calc_entropy(monogram_frequencies)
-	print_green_blue_colored_pair("H1", entropy_via_monogram_frequencies)
+	print_green_blue_colored_pair("H1:", entropy_via_monogram_frequencies)
 	entropy_via_monogram_frequencies_ws = calc_entropy(monogram_frequencies_ws)
-	print_green_blue_colored_pair("H1 with ws", entropy_via_monogram_frequencies_ws)
+	print_green_blue_colored_pair("H1 with ws:", entropy_via_monogram_frequencies_ws)
 
 	# calculate entropy via not overlapped frequencies
 	entropy_via_not_overlapped_bigrams_frequencies = calc_entropy(not_overlapped_bigrams_frequencies)
-	print_green_blue_colored_pair("H2 not overlapped", entropy_via_not_overlapped_bigrams_frequencies)
+	print_green_blue_colored_pair("H2 not overlapped:", entropy_via_not_overlapped_bigrams_frequencies)
 	entropy_via_not_overlapped_bigrams_frequencies_ws = calc_entropy(not_overlapped_bigrams_frequencies_ws)
-	print_green_blue_colored_pair("H2 not overlapped with ws", entropy_via_not_overlapped_bigrams_frequencies_ws)
+	print_green_blue_colored_pair("H2 not overlapped with ws:", entropy_via_not_overlapped_bigrams_frequencies_ws)
 
 	# calculate entropy via overlapping frequencies
 	entropy_via_overlapping_bigrams_frequencies = calc_entropy(overlapping_bigrams_frequencies)
-	print_green_blue_colored_pair("H2 overlapping", entropy_via_overlapping_bigrams_frequencies)
+	print_green_blue_colored_pair("H2 overlapping:", entropy_via_overlapping_bigrams_frequencies)
 	entropy_via_overlapping_bigrams_frequencies_ws = calc_entropy(overlapping_bigrams_frequencies_ws)
-	print_green_blue_colored_pair("H2 overlapping with ws", entropy_via_overlapping_bigrams_frequencies_ws)
+	print_green_blue_colored_pair("H2 overlapping with ws:", entropy_via_overlapping_bigrams_frequencies_ws)
 	
 
 if __name__ == "__main__":
