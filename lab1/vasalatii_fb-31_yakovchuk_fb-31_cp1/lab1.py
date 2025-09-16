@@ -187,31 +187,31 @@ if __name__ == "__main__":
                                             |___/              
         """ + Style.RESET_ALL
 	parser = argparse.ArgumentParser(description=description, formatter_class=argparse.RawTextHelpFormatter)
-	parser.add_argument("-f",dest="file",type=str, required=True, help="File to analyze")
+	parser.add_argument("-f",dest="files",type=str, required=True, nargs="+", help="File to analyze")
 	args = parser.parse_args()
 	print(description)
-	file_path = args.file
-	if not os.path.exists(file_path):
-		print_error(f"{file_path} does not exists")
-	else:
+	for file_path in args.files:
 		print(Fore.LIGHTGREEN_EX + 35*"==" + "\n" + 35*"==" + Style.RESET_ALL)
-		file_type = magic.from_file(args.file,mime=True)
-		print_green_blue_colored_pair(f"File type of {file_path}:", file_type)
-		if "text" not in file_type:
-			print_error("Please, provide text file")
+		if not os.path.exists(file_path):
+			print_error(f"{file_path} does not exists")
 		else:
-			detector = UniversalDetector()
-			with open(file_path, 'rb') as f:
-				for line in f.readlines():
-					detector.feed(line)
-					if detector.done: break
-					detector.close()
-			detection_result = detector.result
-			if detection_result:
-				print_green_blue_colored_pair("Encoding detection result:", detection_result)
-				with open(file_path, encoding=detector.result['encoding']) as f:
-					content = f.read()
-					process_text(content, f'{os.path.basename(file_path).split('.')[0]}_stats.xlsx')
+			file_type = magic.from_file(file_path,mime=True)
+			print_green_blue_colored_pair(f"File type of {file_path}:", file_type)
+			if "text" not in file_type:
+				print_error("Please, provide text file")
 			else:
-				print_error("Failed to detect encoding")
+				detector = UniversalDetector()
+				with open(file_path, 'rb') as f:
+					for line in f.readlines():
+						detector.feed(line)
+						if detector.done: break
+						detector.close()
+				detection_result = detector.result
+				if detection_result:
+					print_green_blue_colored_pair("Encoding detection result:", detection_result)
+					with open(file_path, encoding=detector.result['encoding']) as f:
+						content = f.read()
+						process_text(content, f'{os.path.basename(file_path).split('.')[0]}_stats.xlsx')
+				else:
+					print_error("Failed to detect encoding")
 		
