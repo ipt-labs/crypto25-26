@@ -165,15 +165,15 @@ def process_text(text:str, stats_filepath: str):
 	print_green_blue_colored_pair("Redundancy based on monogram (including wide spaces) entropy:", redundancy_mg_ws)
 
 	# calculate redundancy for not overlapped bigram entropies
-	redundancy_bg_no = calculate_redundancy(entropy_via_not_overlapped_bigrams_frequencies, alphabet_length**2)
+	redundancy_bg_no = calculate_redundancy(entropy_via_not_overlapped_bigrams_frequencies / 2, alphabet_length)
 	print_green_blue_colored_pair("Redundancy based on bigram (not overlapped) entropy:", redundancy_bg_no)
-	redundancy_bg_ws_no = calculate_redundancy(entropy_via_not_overlapped_bigrams_frequencies_ws, alphabet_length**2)
+	redundancy_bg_ws_no = calculate_redundancy(entropy_via_not_overlapped_bigrams_frequencies_ws / 2, alphabet_length)
 	print_green_blue_colored_pair("Redundancy based on bigram (not overlapped, including wide spaces) entropy:", redundancy_bg_ws_no)
 
 	# calculate redundancy for overlapping bigram entropies
-	redundancy_bg_ov = calculate_redundancy(entropy_via_overlapping_bigrams_frequencies, alphabet_length ** 2)
+	redundancy_bg_ov = calculate_redundancy(entropy_via_overlapping_bigrams_frequencies / 2, alphabet_length)
 	print_green_blue_colored_pair("Redundancy based on bigram (overlapping) entropy:", redundancy_bg_ov)
-	redundancy_bg_ws_ov = calculate_redundancy(entropy_via_overlapping_bigrams_frequencies_ws, alphabet_length ** 2)
+	redundancy_bg_ws_ov = calculate_redundancy(entropy_via_overlapping_bigrams_frequencies_ws / 2, alphabet_length)
 	print_green_blue_colored_pair("Redundancy based on bigram (overlapping, including wide spaces) entropy:",
 	                              redundancy_bg_ws_ov)
 
