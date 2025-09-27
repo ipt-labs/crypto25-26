@@ -5,7 +5,7 @@ from tabulate import tabulate
 def print_error(error: str) -> None:
 	print(Fore.RED + error + Style.RESET_ALL)
 
-def print_green_blue_colored_pair(tag: str, value: str | int | float | dict, indentation: str='') -> None:
+def print_green_blue_colored_pair(tag: str, value: str | int | float | dict | list, indentation: str='') -> None:
 	print(indentation + Fore.LIGHTGREEN_EX + tag + " " + Fore.LIGHTBLUE_EX + str(value) + Style.RESET_ALL)
 
 def print_df(frame: pd.DataFrame, title: str=None) -> None:
