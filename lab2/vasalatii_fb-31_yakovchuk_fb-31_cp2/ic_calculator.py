@@ -7,6 +7,7 @@ import os
 import pandas as pd
 from vigenere import VigenereCipher
 from beautiful_prints import print_df, print_error, print_green_blue_colored_pair
+from plots import barplot
 
 def calculate_ic(text:str, r: int):
 	total = 0
@@ -28,8 +29,10 @@ def process_text(content:str):
 
 	keys = [gen_rand_word(alphabet, i) for i in range(2, 31)]
 	print_green_blue_colored_pair("Used random keys:", keys)
-	stats = []
 
+	print_green_blue_colored_pair("Index of coincidence of plain text:", calculate_ic(filtered_text, 1))
+
+	stats = []
 	for key in keys:
 		ct = VigenereCipher(key, alphabet).encrypt(filtered_text)
 		stats.append({
@@ -38,6 +41,9 @@ def process_text(content:str):
 
 	df = pd.DataFrame(stats)
 	print_df(df)
+	barplot(df['key_len'], df['ic'], "Indexes of coincidence by different key lengths",
+	        "Key length", "IC", True, 90)
+
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
