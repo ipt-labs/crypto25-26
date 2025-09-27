@@ -23,7 +23,7 @@ def calculate_ic(text:str, r: int):
 def gen_rand_word(alphabet:str, size:int):
 	return "".join(choice(alphabet) for _ in range(size))
 
-def process_text(content:str, basepath: str):
+def process_text(content:str, basepath: str, stats_dir: str, plt_dir: str):
 	alphabet = "абвгдежзийклмнопрстуфхцчшщъыьэюя"
 	filtered_text = ''.join(filter(lambda char: char in alphabet, content.strip().lower().replace("ё","е")))
 
@@ -33,25 +33,32 @@ def process_text(content:str, basepath: str):
 	print_green_blue_colored_pair("Index of coincidence of plain text:", calculate_ic(filtered_text, 1))
 
 	stats = []
+	stats_file = open(f"{os.path.join(stats_dir,basepath)}_cts_stats.txt","w")
 	for key in keys:
 		ct = VigenereCipher(key, alphabet).encrypt(filtered_text)
+		ic = calculate_ic(ct,1)
+		stats_file.write(f"Key: {key}\n{ct}\nIndex of coincidence: {ic}\n\n")
 		stats.append({
-			 'key_len': len(key),'ic': calculate_ic(ct,1)
+			 'key_len': len(key),'ic': ic
 		})
-
+	stats_file.close()
+	
 	df = pd.DataFrame(stats)
 	print_df(df)
 	
-	plot_dir = "plots"
-	os.makedirs(plot_dir,exist_ok=True)
 	barplot(df['key_len'], df['ic'], "Indexes of coincidence by different key lengths",
-	        "Key length", "IC", True, 90, f"{os.path.join(plot_dir,basepath)}_ics_stats_barplot.png")
+	        "Key length", "IC", True, 90, f"{os.path.join(plt_dir,basepath)}_ics_stats_barplot.png")
 
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 	parser.add_argument("-f",dest="files",type=str, required=True, nargs="+", help="File to analyze")
 	args = parser.parse_args()
+	
+	stats_dir = "stats"
+	os.makedirs(stats_dir,exist_ok=True)
+	plot_dir = "plots"
+	os.makedirs(plot_dir,exist_ok=True)
 
 	for file_path in args.files:
 		print(Fore.LIGHTGREEN_EX + 35*"==" + "\n" + 35*"==" + Style.RESET_ALL)
@@ -74,6 +81,6 @@ if __name__ == "__main__":
 					print_green_blue_colored_pair("Encoding detection result:", detection_result)
 					with open(file_path, encoding=detector.result['encoding']) as f:
 						content = f.read()
-						process_text(content,f'{os.path.basename(file_path).split('.')[0]}')
+						process_text(content,f'{os.path.basename(file_path).split('.')[0]}', stats_dir, plot_dir)
 				else:
 					print_error("Failed to detect encoding")
