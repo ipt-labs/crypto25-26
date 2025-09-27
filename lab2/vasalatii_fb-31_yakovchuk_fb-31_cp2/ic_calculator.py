@@ -8,10 +8,10 @@ import pandas as pd
 from vigenere import VigenereCipher
 from beautiful_prints import print_df, print_error, print_green_blue_colored_pair
 
-def calculate_ic(text:str):
+def calculate_ic(text:str, r: int):
 	total = 0
 	symbol_count = {}
-	for ch in text:
+	for ch in text[::r]:
 		total+=1
 		if ch in symbol_count:
 			symbol_count[ch] +=1
@@ -28,14 +28,12 @@ def process_text(content:str):
 
 	keys = [gen_rand_word(alphabet, i) for i in range(2, 31)]
 	print_green_blue_colored_pair("Used random keys:", keys)
-	cts = {}
 	stats = []
 
 	for key in keys:
 		ct = VigenereCipher(key, alphabet).encrypt(filtered_text)
-		cts[key] = ct
 		stats.append({
-			 'key_len': len(key),'ic': calculate_ic(ct)
+			 'key_len': len(key),'ic': calculate_ic(ct,1)
 		})
 
 	df = pd.DataFrame(stats)
