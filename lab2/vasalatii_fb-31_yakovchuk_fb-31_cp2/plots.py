@@ -1,7 +1,7 @@
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-def barplot(x, y, title:str, x_label:str, y_label:str, should_show_values:bool, values_rot: int = 0):
+def barplot(x, y, title:str, x_label:str, y_label:str, should_show_values:bool, values_rot: int = 0, save_path:str= None):
     plt.figure(figsize=(12, 6))
     sns.set_theme(style="whitegrid")
 
@@ -19,5 +19,7 @@ def barplot(x, y, title:str, x_label:str, y_label:str, should_show_values:bool, 
     ax.set_xlabel(x_label, fontsize=12)
     ax.set_ylabel(y_label, fontsize=12)
 
+    if save_path:
+        plt.savefig(save_path)
 
     plt.show()

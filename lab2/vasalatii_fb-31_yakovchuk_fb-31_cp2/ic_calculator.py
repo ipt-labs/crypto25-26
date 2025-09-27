@@ -23,7 +23,7 @@ def calculate_ic(text:str, r: int):
 def gen_rand_word(alphabet:str, size:int):
 	return "".join(choice(alphabet) for _ in range(size))
 
-def process_text(content:str):
+def process_text(content:str, basepath: str):
 	alphabet = "абвгдежзийклмнопрстуфхцчшщъыьэюя"
 	filtered_text = ''.join(filter(lambda char: char in alphabet, content.strip().lower().replace("ё","е")))
 
@@ -41,8 +41,11 @@ def process_text(content:str):
 
 	df = pd.DataFrame(stats)
 	print_df(df)
+	
+	plot_dir = "plots"
+	os.makedirs(plot_dir,exist_ok=True)
 	barplot(df['key_len'], df['ic'], "Indexes of coincidence by different key lengths",
-	        "Key length", "IC", True, 90)
+	        "Key length", "IC", True, 90, f"{os.path.join(plot_dir,basepath)}_ics_stats_barplot.png")
 
 
 if __name__ == "__main__":
@@ -71,6 +74,6 @@ if __name__ == "__main__":
 					print_green_blue_colored_pair("Encoding detection result:", detection_result)
 					with open(file_path, encoding=detector.result['encoding']) as f:
 						content = f.read()
-						process_text(content)
+						process_text(content,f'{os.path.basename(file_path).split('.')[0]}')
 				else:
 					print_error("Failed to detect encoding")
