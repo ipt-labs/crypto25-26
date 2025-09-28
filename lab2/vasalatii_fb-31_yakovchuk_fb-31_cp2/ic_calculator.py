@@ -32,7 +32,8 @@ def process_text(content:str, basepath: str, stats_dir: str, plt_dir: str):
 	print_green_blue_colored_pair("Index of coincidence of plain text:", calculate_ic(filtered_text, 1))
 
 	stats = []
-	stats_file = open(f"{os.path.join(stats_dir,basepath)}_cts_stats.txt","w")
+	stats_path_base = f"{os.path.join(stats_dir,basepath)}_cts_stats"
+	stats_file = open(f"{stats_path_base}.txt","w")
 	for key in keys:
 		ct = VigenereCipher(key, alphabet).encrypt(filtered_text)
 		ic = calculate_ic(ct,1)
@@ -44,6 +45,10 @@ def process_text(content:str, basepath: str, stats_dir: str, plt_dir: str):
 	
 	df = pd.DataFrame(stats)
 	print_df(df)
+
+	writer = pd.ExcelWriter(f"{stats_path_base}.xlsx", engine='xlsxwriter')
+	df.to_excel(writer, sheet_name="ICS_for_CTS", index=False)
+	writer.close()
 	
 	barplot(df['key_len'], df['ic'], "Indexes of coincidence by different key lengths",
 	        "Key length", "IC", True, 90, f"{os.path.join(plt_dir,basepath)}_ics_stats_barplot.png")
