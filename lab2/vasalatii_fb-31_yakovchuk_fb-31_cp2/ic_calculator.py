@@ -1,5 +1,6 @@
 import argparse
 from random import choice
+from typing import Counter
 from colorama import Fore, Style
 from chardet.universaldetector import UniversalDetector
 import magic
@@ -9,16 +10,14 @@ from vigenere import VigenereCipher
 from beautiful_prints import print_df, print_error, print_green_blue_colored_pair
 from plots import barplot
 
-def calculate_ic(text:str, r: int):
-	total = 0
-	symbol_count = {}
-	for ch in text[::r]:
-		total+=1
-		if ch in symbol_count:
-			symbol_count[ch] +=1
-		else:
-			symbol_count[ch] = 1
-	return sum([count*(count-1) for count in list(symbol_count.values())])/(total*(total-1))
+
+def calculate_ic(text: str, r: int):
+    subseq = text[::r]
+    total = len(subseq)
+    if total < 2:
+        return 0
+    counts = Counter(subseq)
+    return sum(c*(c-1) for c in counts.values()) / (total*(total-1))
 
 def gen_rand_word(alphabet:str, size:int):
 	return "".join(choice(alphabet) for _ in range(size))
