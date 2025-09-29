@@ -4,7 +4,7 @@ import csv, math, re
 from pathlib import Path
 from collections import Counter
 
-INPUT_FILE = Path("lab1.txt")
+INPUT_FILE = Path("data/input.txt")
 OUT_DIR = Path("out")
 LETTERS = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяіїєґ"
 
