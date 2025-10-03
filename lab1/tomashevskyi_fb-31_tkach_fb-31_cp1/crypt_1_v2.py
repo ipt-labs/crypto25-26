@@ -59,8 +59,8 @@ def analyze_text(text, isSpace=False):
     symbols_count = len(alphabet) if isSpace else len(alphabet) - 1
 
     redundancy_h1 = source_redundancy(entropy_h1, symbols_count)
-    redundancy_h2_overlap = source_redundancy(entropy_h2_overlap, symbols_count ** 2)
-    redundancy_h2_non_overlap = source_redundancy(entropy_h2_non_overlap, symbols_count ** 2)
+    redundancy_h2_overlap = source_redundancy(entropy_h2_overlap, symbols_count)
+    redundancy_h2_non_overlap = source_redundancy(entropy_h2_non_overlap, symbols_count)
 
     return {
         "letter_freq": letter_freq,
