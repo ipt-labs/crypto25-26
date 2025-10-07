@@ -4,6 +4,7 @@ from collections import Counter
 
 alphabet = set("абвгдеёжзийклмнопрстуфхцчшщъыьэюя")
 
+
 def normalize_text(s, keep_spaces=True):
     s = s.lower()
     s = s.replace("\r", " ").replace("\n", " ").replace("\t", " ")
@@ -22,8 +23,8 @@ def normalize_text(s, keep_spaces=True):
 
 def count_ngrams(path, keep_spaces=True, buf_size=1024 * 1024):
     letters = Counter()
-    bigrams_overlapping = Counter()
-    bigrams_non_overlapping = Counter()
+    bigrams_overlap = Counter()
+    bigrams_non_overlap = Counter()
     total = 0
     prev_char = None
     prev_non_overlap_char = None
@@ -44,7 +45,7 @@ def count_ngrams(path, keep_spaces=True, buf_size=1024 * 1024):
                 if prev_char is not None:
                     if (prev_char in alphabet or (keep_spaces and prev_char == ' ')) and \
                             (ch in alphabet or (keep_spaces and ch == ' ')):
-                        bigrams_overlapping[prev_char + ch] += 1
+                        bigrams_overlap[prev_char + ch] += 1
                 prev_char = ch
 
                 if is_even:
@@ -53,52 +54,29 @@ def count_ngrams(path, keep_spaces=True, buf_size=1024 * 1024):
                 else:
                     if (prev_non_overlap_char in alphabet or (keep_spaces and prev_non_overlap_char == ' ')) and \
                             (ch in alphabet or (keep_spaces and ch == ' ')):
-                        bigrams_non_overlapping[prev_non_overlap_char + ch] += 1
+                        bigrams_non_overlap[prev_non_overlap_char + ch] += 1
                     is_even = True
 
-    return letters, bigrams_overlapping, bigrams_non_overlapping, total
+    return letters, bigrams_overlap, bigrams_non_overlap, total
+
 
 def count_H1(monograms, total):
     if total == 0:
         return 0.0
     return -sum((cnt / total) * math.log2(cnt / total) for cnt in monograms.values() if cnt > 0)
 
-def count_H2(bigrams, monograms, total):
-    denom = total - 1
-    if denom <= 0:
+
+def count_H2(bigrams, total_bigrams):
+    if total_bigrams <= 0:
         return 0.0
-
-    H2 = 0.0
-    for bg, cnt_ab in bigrams.items():
-        a = bg[0]
-        cnt_a = monograms.get(a, 0)
-        if cnt_a == 0:
-            continue
-
-        p_b_a = cnt_ab / cnt_a
-
-        p_ab = cnt_ab / denom
-
-        if p_ab > 0 and p_b_a > 0:
-            H2 -= p_ab * math.log2(p_b_a)
-    return H2
+    return -sum((cnt / total_bigrams) * math.log2(cnt / total_bigrams)
+                for cnt in bigrams.values() if cnt > 0) / 2
 
 def source_redundancy(entropy, symbols_count):
     if symbols_count <= 1:
         return 0.0
     return 1 - entropy / math.log2(symbols_count)
 
-def save_results(path, output_file="crypto_analysis.txt", top_n=50):
-    results_with_spaces = analyze_text(path, keep_spaces=True)
-
-    results_without_spaces = analyze_text(path, keep_spaces=False)
-
-    with open(output_file, "w", encoding="utf-8") as f:
-        write(f, "З пробілами", results_with_spaces, top_n)
-        f.write("\n" + "=" * 70 + "\n\n")
-        write(f, "Без пробілів", results_without_spaces, top_n)
-
-    print(f"Аналіз завершено. Результати збережено у '{output_file}'")
 
 def analyze_text(path, keep_spaces):
     letters, bigrams_overlap, bigrams_non_overlap, total = count_ngrams(path, keep_spaces)
@@ -113,8 +91,8 @@ def analyze_text(path, keep_spaces):
         symbols_set = alphabet
 
     H1 = count_H1(letters_for_entropy, total_for_entropy)
-    H2_overlap = count_H2(bigrams_overlap, letters_for_entropy, total_for_entropy)
-    H2_non_overlap = count_H2(bigrams_non_overlap, letters_for_entropy, total_for_entropy)
+    H2_overlap = count_H2(bigrams_overlap, sum(bigrams_overlap.values()))
+    H2_non_overlap = count_H2(bigrams_non_overlap, sum(bigrams_non_overlap.values()))
 
     R1 = source_redundancy(H1, len(symbols_set))
     R2_overlap = source_redundancy(H2_overlap, len(symbols_set))
@@ -132,6 +110,19 @@ def analyze_text(path, keep_spaces):
         "R2_overlap": R2_overlap,
         "R2_non_overlap": R2_non_overlap
     }
+
+
+def save_results(path, output_file="crypto_analysis.txt", top_n=50):
+    results_with_spaces = analyze_text(path, keep_spaces=True)
+    results_without_spaces = analyze_text(path, keep_spaces=False)
+
+    with open(output_file, "w", encoding="utf-8") as f:
+        write(f, "З пробілами", results_with_spaces, top_n)
+        f.write("\n" + "=" * 70 + "\n\n")
+        write(f, "Без пробілів", results_without_spaces, top_n)
+
+    print(f"Аналіз завершено. Результати збережено у '{output_file}'")
+
 
 def write(f, label, results, top_n):
     f.write(f"============================================================\n")
@@ -167,6 +158,7 @@ def write(f, label, results, top_n):
     write_matrix(f, "Матриця частот біграм (Перетин)", bigram_overlap_matrix_data, symbols)
     write_matrix(f, "Матриця частот біграм (Без перетину)", bigram_non_overlap_matrix_data, symbols)
 
+
 def write_table(f, header, data, key_label, value_label, display_func=lambda x: x):
     col1_width = max(len(key_label), max((len(display_func(k)) for k, v in data), default=0)) + 2
     col2_width = max(len(value_label), 12) + 2
@@ -182,6 +174,7 @@ def write_table(f, header, data, key_label, value_label, display_func=lambda x: 
         f.write(f"  | {key_str:<{col1_width - 2}} | {value_str:<{col2_width - 2}} |\n")
 
     f.write("  " + "-" * (col1_width + col2_width + 3) + "\n\n")
+
 
 def write_matrix(f, header, bigrams_data, symbols, value_width=7):
     if not symbols:
@@ -204,6 +197,7 @@ def write_matrix(f, header, bigrams_data, symbols, value_width=7):
             f.write(f"{freq_str: >{value_width}}")
         f.write(" |\n")
     f.write("  " + "-" * (4 + value_width * len(symbols)) + "\n\n")
+
 
 if __name__ == "__main__":
     try:
