@@ -28,9 +28,17 @@ int main() {
         }
     }
 
+    int total = text.size();
+
     // frequency of words
     map<char, int> freq1;
     for (char c : text) freq1[c]++;
+
+    //output is H1+frequency every letter
+    for (auto p : freq1) {
+        double prob = (double)p.second / total;
+        cout << p.first << "  " << p.second << "  " << prob << endl;
+    }
 
     cout << "H1 = " << entropy1(freq1, text.size()) << endl;
 
