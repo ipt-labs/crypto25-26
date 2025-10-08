@@ -28,12 +28,13 @@ double entropy2(const map<string, int> freq, int total) {
 }
 
 int main() {
+    //===================WITHOUT SPACE============================
     ifstream fin("input.txt"); 
     string text, line;
     while (getline(fin, line)) {
         for (char c : line) {
-            if (isalpha(c)) {
-                c = tolower(c); 
+            if (isalpha((unsigned char)c)) {
+                c = tolower((unsigned char)c);
                 text += c;
             }
         }
@@ -44,6 +45,8 @@ int main() {
     // frequency of words
     map<char, int> freq1;
     for (char c : text) freq1[c]++;
+
+    cout << endl << "=== WITHOUT SPACES ===\n";
 
     cout << "For H1: " << endl;
 
@@ -73,6 +76,52 @@ int main() {
     }
 
     cout << "H2 = " << entropy2(freq2, total - 1);
+
+    //=====================WITH SPACE==============================
+
+    fin.clear();          //pointer on the start
+    fin.seekg(0, ios::beg);
+
+    string text2, line2;
+    while (getline(fin, line2)) {
+        for (char c : line2) {
+            if (isalpha((unsigned char)c) || c == ' ') {
+                c = tolower((unsigned char)c);
+                text2 += c;
+            }
+        }
+        text2 += ' '; //space between lines
+    }
+
+    int total2 = text2.size();
+
+    map<char, int> freq1_space;
+    for (char c : text2) freq1_space[c]++;
+
+    map<string, int> freq2_space;
+    for (size_t i = 0; i + 1 < text2.size(); i++) {
+        string bigram = "";
+        bigram += text2[i];
+        bigram += text2[i + 1];
+        freq2_space[bigram]++;
+    }
+
+    cout << endl << "=== WITH SPACES ===\n";
+    for (auto p : freq1_space) {
+        double prob = (double)p.second / total2;
+        cout << (p.first == ' ' ? '_' : p.first) << "  " << p.second << "  " << prob << endl;
+    }
+
+    cout << "H1 = " << entropy1(freq1_space, total2) << endl;
+
+    for (auto p : freq2_space) {
+        double prob = (double)p.second / (total2 - 1);
+        string show = p.first;
+        for (char& ch : show) if (ch == ' ') ch = '_';
+        cout << show << "  " << p.second << "  " << prob << endl;
+    }
+
+    cout << "H2 = " << entropy2(freq2_space, total2 - 1) << endl;
 
     return 0;
 }
