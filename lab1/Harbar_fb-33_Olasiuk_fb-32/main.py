@@ -151,6 +151,14 @@ def calculatings(text, output_file):
     R_H2_int = redundancy(H2_int, 31)
     R_H2_sp_int = redundancy(H2_sp_int, 32)
 
+    H10 = (2.53007945178473 + 3.27016036564542)/2
+    H20 = (2.09369203404264 + 2.74291016606417)/2
+    H30 = (1.4170205694229 + 2.13972183240961)/2
+
+    R_H10 = redundancy(H10, 32)
+    R_H20 = redundancy(H20, 32)
+    R_H30 = redundancy(H30, 32)
+
     print("=========ENTROPY=========")
     print(f"H1, {H1}")
     print(f"H1 (with spaces), {H1_sp}")
@@ -166,6 +174,9 @@ def calculatings(text, output_file):
     print(f"R2-H2 (with spaces), {R_H2_sp}")
     print(f"R2-H2 (with intersection), {R_H2_int}")
     print(f"R2-H2 (with all)), {R_H2_sp_int}")
+    print(f"R-H10, {R_H10}")
+    print(f"R-H20, {R_H20}")
+    print(f"R-H30, {R_H30}")
 
 
 path = "fat_lion.txt"      
