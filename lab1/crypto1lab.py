@@ -25,7 +25,7 @@ print("(letter, count, frequency)")
 for letter, count, frequency in sorted_letters_sp:
     print(letter, count, frequency)
 
-bigrams_n_sp = defaultdict(int)
+bigrams_n_sp = defaultdict(int) 
 for i in range(0, len(text_sp) - 1, 2):
     bigrams_n_sp[text_sp[i:i+2]] += 1
 
@@ -107,6 +107,36 @@ print("\nBigram frequency matrix with overlapping (no spaces):")
 print(matrix_o_ns)
 matrix_o_ns.to_csv('matrix_o_ns.csv', index=True)
 
+# H_10 = 2.07
+# H_20 = 2.45
+# H_30 = 1.77 
+
+
+H_10 = (2.03176582043426 + 2.10604809541833) / 2
+H_20 = (2.24849672538168 + 2.64242396177197) / 2
+H_30 = (1.54239602903911 + 1.99930732949931) / 2
+
+m_sp = len(unique_sp)
+H0_sp = math.log2(m_sp)
+H1_sp = calculate_entropy(letters_sp.values())
+H2_o_sp = calculate_entropy(bigrams_o_sp.values()) / 2
+
+print(f"Розмір алфавіту: {m_sp} символів")
+print(f"H0 = {H0_sp:.4f} біт/символ\n")
+
+models = [
+    ("H10", H_10),
+    ("H20", H_20),
+    ("H30", H_30),
+]
+
+print(f"{'Модель':<25} {'Ентропія':<15} {'Надлишковість'}")
+for name, H in models:
+    R = (1 - H/H0_sp) * 100
+    print(f"{name:<25} {H:<15.4f} {R:>6.2f}%")
+    
+print(f"H(30) до R = {(1-H_30/H0_sp)*100:.2f}%")
+
 while True:
     input_letter = input('Enter a letter: ')
     if input_letter in unique_sp:
@@ -115,3 +145,4 @@ while True:
         print(f"Possible letters after '{input_letter}': {', '.join(sorted_possible_letters.index)}")
     else:
         print("Letter not found in the text. Please enter a valid letter.")
+
