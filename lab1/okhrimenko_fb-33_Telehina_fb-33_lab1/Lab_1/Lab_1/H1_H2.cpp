@@ -58,7 +58,7 @@ int main() {
 
     cout << "H1 = " << entropy1(freq1, text.size()) << endl;
     
-    cout << "For H2: " << endl;
+    cout << "===============For H2 (overlapping): " << endl;
 
     // frequency of bigrams
     map<string, int> freq2;
@@ -75,7 +75,24 @@ int main() {
         cout << p.first << "  " << p.second << "  " << prob << endl;
     }
 
-    cout << "H2 = " << entropy2(freq2, total - 1);
+    cout << "H2(overlapping) = " << entropy2(freq2, total - 1);
+
+    // ---------- no-overlapping ----------
+    cout << "===============For H2 (overlapping): " << endl;
+    map<string, int> freq2_nonoverlap;
+    for (size_t i = 0; i + 1 < text.size(); i += 2) {
+        string bigram = "";
+        bigram += text[i];
+        bigram += text[i + 1];
+        freq2_nonoverlap[bigram]++;
+    }
+
+    for (auto p : freq2_nonoverlap) {
+        double prob = (double)p.second / (total - 1);
+        cout << p.first << "  " << p.second << "  " << prob << endl;
+    }
+
+    cout << "H2(non-overlapping) = " << entropy2(freq2_nonoverlap, total / 2) << endl;
 
     //=====================WITH SPACE==============================
 
@@ -122,6 +139,23 @@ int main() {
     }
 
     cout << "H2 = " << entropy2(freq2_space, total2 - 1) << endl;
+
+    // ---------- no-overlapping ----------
+    cout << "===============For H2 (overlapping): " << endl;
+    map<string, int> freq3_nonoverlap;
+    for (size_t i = 0; i + 1 < text.size(); i += 2) {
+        string bigram = "";
+        bigram += text[i];
+        bigram += text[i + 1];
+        freq3_nonoverlap[bigram]++;
+    }
+
+    for (auto p : freq3_nonoverlap) {
+        double prob = (double)p.second / (total - 1);
+        cout << p.first << "  " << p.second << "  " << prob << endl;
+    }
+
+    cout << "H2(non-overlapping) = " << entropy2(freq3_nonoverlap, total / 2) << endl;
 
     return 0;
 }
