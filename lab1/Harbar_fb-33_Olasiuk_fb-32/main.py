@@ -1,14 +1,11 @@
-import argparse
+import re
 import math
 import os
 import pandas as pd
-import magic
 from chardet.universaldetector import UniversalDetector
 
 ALPHABET = "абвгдежзийклмнопрстуфхцчшщыьэюя"
 ALPHABET_ = "абвгдежзийклмнопрстуфхцчшщыьэюя "
-
-import re
 
 def clean_text(text):
     text = text.strip().lower().replace("ё","е").replace("ъ","ь")
@@ -162,7 +159,7 @@ def calculatings(text, output_file):
     print(f"H2 (with intersection), {H2_int}")
     print(f"H2 (with all)), {H2_sp_int}")
 
-    print("=========ENTROPY=========")
+    print("=========REDUNDANCY=========")
     print(f"R1-H1, {R_H1}")
     print(f"R1-H1 (with spaces), {R_H1_sp}")
     print(f"R2-H2, {R_H2}")
