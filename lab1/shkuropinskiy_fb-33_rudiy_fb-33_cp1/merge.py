@@ -8,8 +8,8 @@ with open("merged1.txt", "w", encoding="utf-8") as outfile:
             text = infile.read()
             text = text.lower()
             text = re.sub(f"[^ {russian}]", " ", text)
+            text = re.sub(r"\s+", " ", text)
         outfile.write(text)
-        outfile.write("\n")
 
 
 with open("merged_without_spaces.txt", "w", encoding="utf-8") as outfile:

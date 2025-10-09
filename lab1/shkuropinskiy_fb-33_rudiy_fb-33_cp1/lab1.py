@@ -1,7 +1,9 @@
 import pandas as pd
 import math
 
-russian = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя"
+russian = " " + "абвгдеёжзийклмнопрстуфхцчшщъыьэюя" # with space
+# russian = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя" # without space
+
 
 def count_letters(text):
     dictionary = {}
@@ -12,7 +14,7 @@ def count_letters(text):
                 dictionary[char] += 1
             else:
                 dictionary[char] = 1
-
+    # print(dictionary)
     return dictionary
 
 def count_for_leters(result_letters):
@@ -46,7 +48,7 @@ def bigrams(text, letter_russian,  filename="bigrams.xlsx", step=1):
             bigrams_count[bigram] += 1
         else:
             bigrams_count[bigram] = 1
-        
+        # print(bigrams_count)
     total_bigrams = sum(bigrams_count.values())
     df = pd.DataFrame(0, index=list(letter_russian), columns=list(letter_russian), dtype=float)
     for bigram, count in bigrams_count.items():
@@ -66,7 +68,7 @@ def bigrams(text, letter_russian,  filename="bigrams.xlsx", step=1):
 
 if __name__ == "__main__":
 
-    with open("merged_without_spaces.txt", "r", encoding="utf-8") as file:
+    with open("merged_without_spaces.txt", "r", encoding="utf-8") as file:  # merged1.txt(with spaces) or merged_without_spaces.txt(without spaces)
         text = file.read()
 
     result_letters = count_letters(text)
