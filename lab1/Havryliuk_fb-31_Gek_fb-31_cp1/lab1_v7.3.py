@@ -2,6 +2,7 @@ import math
 from collections import defaultdict
 import sys
 
+
 class DualOutput:
     def __init__(self, filename):
         self.terminal = sys.stdout
@@ -17,28 +18,6 @@ class DualOutput:
     
     def close(self):
         self.log.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def ochystyty_tekst(raw_text):
@@ -137,21 +116,6 @@ def vykorystaty_matrycyu_bihram(bihramy_dict):
     for bihrama, kilkist in sorted_bihrams[:20]:
         display_bg = bihrama.replace(' ', '_')
         print(f"{display_bg:<10} {kilkist:<12}")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -255,10 +219,6 @@ def main():
         
 
 
-
-
-
-
         h0_z_probilamy = math.log2(33)
         h0_bez_probiliv = math.log2(32)
         
@@ -271,21 +231,6 @@ def main():
         r_h2_peretyn_bez = 1 - h2_bez_peretyn / h0_bez_probiliv
         r_h2_bez_peretyn_bez = 1 - h2_bez_bez / h0_bez_probiliv
         
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         print(f"\nНАДЛИШКОВІСТЬ:")
