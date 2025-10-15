@@ -20,7 +20,25 @@ class DualOutput:
 
 
 
-################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def ochystyty_tekst(raw_text):
@@ -69,6 +87,7 @@ def pidrahuvaty_bihramy_peretyn(tekst):
         ymovirnist_bihram[bihrama] = kilkist / zahalna_kilkist_bihram
     
     return ymovirnist_bihram, bihramy_counter
+
 
 def pidrahuvaty_bihramy_bez_peretynu(tekst):
     bihramy_counter = defaultdict(int)
@@ -121,7 +140,17 @@ def vykorystaty_matrycyu_bihram(bihramy_dict):
 
 
 
-#############
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -224,15 +253,53 @@ def main():
         print(f"  H2 (перетин) = {h2_bez_peretyn:.4f} біт")
         print(f"  H2 (без перетину) = {h2_bez_bez:.4f} біт")
         
+
+
+
+
+
+
         h0_z_probilamy = math.log2(33)
         h0_bez_probiliv = math.log2(32)
         
-        r1_z = 1 - h1_z_probilamy / h0_z_probilamy
-        r1_bez = 1 - h1_bez_probiliv / h0_bez_probiliv
+        r_h1_z = 1 - h1_z_probilamy / h0_z_probilamy
+        r_h1_bez = 1 - h1_bez_probiliv / h0_bez_probiliv
         
+        r_h2_peretyn_z = 1 - h2_peretyn / h0_z_probilamy
+        r_h2_bez_peretyn_z = 1 - h2_bez / h0_z_probilamy
+        
+        r_h2_peretyn_bez = 1 - h2_bez_peretyn / h0_bez_probiliv
+        r_h2_bez_peretyn_bez = 1 - h2_bez_bez / h0_bez_probiliv
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         print(f"\nНАДЛИШКОВІСТЬ:")
-        print(f"  R (модель H1, з пробілами) = {r1_z:.4f} ({r1_z*100:.2f}%)")
-        print(f"  R (модель H1, без пробілів) = {r1_bez:.4f} ({r1_bez*100:.2f}%)")
+        print(f"\nМодель H1:")
+        print(f"  R (з пробілами) = {r_h1_z:.4f} ({r_h1_z*100:.2f}%)")
+        print(f"  R (без пробілів) = {r_h1_bez:.4f} ({r_h1_bez*100:.2f}%)")
+        
+        print(f"\nМодель H2 (з перетином):")
+        print(f"  R (з пробілами) = {r_h2_peretyn_z:.4f} ({r_h2_peretyn_z*100:.2f}%)")
+        print(f"  R (без пробілів) = {r_h2_peretyn_bez:.4f} ({r_h2_peretyn_bez*100:.2f}%)")
+        
+        print(f"\nМодель H2 (без перетину):")
+        print(f"  R (з пробілами) = {r_h2_bez_peretyn_z:.4f} ({r_h2_bez_peretyn_z*100:.2f}%)")
+        print(f"  R (без пробілів) = {r_h2_bez_peretyn_bez:.4f} ({r_h2_bez_peretyn_bez*100:.2f}%)")
     
     finally:
         output_handler.close()
