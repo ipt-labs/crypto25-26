@@ -4,9 +4,13 @@ import pandas as pd
 
 def normalize(text, keep_spaces=True):
     text = text.lower().replace('ё','е').replace('ъ','ь')
-    text = re.sub(r'[^а-я ]', ' ', text)
-    text = re.sub(r'\s+', ' ', text).strip()
-    return text if keep_spaces else text.replace(' ', '')
+    if keep_spaces:
+        text = re.sub(r'[^а-я ]', ' ', text)
+        text = re.sub(r'\s+', ' ', text).strip()
+    else:
+        text = re.sub(r'[^а-я]', '', text)
+    return text
+
 
 def frequencies(seq, n=1, step=1):
     items = [seq[i:i+n] for i in range(0, len(seq)-n+1, step)]
@@ -40,6 +44,6 @@ def process(path, keep_spaces=True):
     print(f"H2 перекриття = {entropy(bigr_1)/2:.6f}")
     print(f"H2 без перекриття = {entropy(bigr_2)/2:.6f}\n")
 
-file = "start.txt"
-process(file, True)
-process(file, False)
+file = "kafka.txt"
+process(file, keep_spaces=True)
+process(file, keep_spaces=False)
