@@ -8,7 +8,6 @@ ALPHABET = list("абвгдежзийклмнопрстуфхцчшщьыэюя_
 M = len(ALPHABET)
 
 def preprocess(text: str) -> str:
-
     text = text.lower().translate(str.maketrans({"ё": "е", "ъ": "ь", " ": "_"}))
     text = re.sub(r"[^а-я_]", "_", text)
     return re.sub(r"_+", "_", text).strip("_")
@@ -31,13 +30,23 @@ def entropy_h(text: str, n: int) -> float:
     total = sum(counter.values())
     return -(1 / n) * sum((c / total) * math.log2(c / total) for c in counter.values())
 
+def entropy_h_no_overlap(text: str, n: int) -> float:
+    if not text:
+        return 0
+    step = n
+    counter = collections.Counter(text[i:i + n] for i in range(0, len(text) - n + 1, step))
+    total = sum(counter.values())
+    return -(1 / n) * sum((c / total) * math.log2(c / total) for c in counter.values())
 
-def entropy_experiments(text: str, n: int, trials: int = 50, length: int = 1000) -> float:
+def entropy_experiments(text: str, n: int, trials: int = 50, length: int = 1000, no_overlap=False) -> float:
     results = []
     for _ in range(trials):
         start = random.randrange(max(1, len(text) - length))
         sample = text[start: start + length]
-        results.append(entropy_h(sample, n))
+        if no_overlap:
+            results.append(entropy_h_no_overlap(sample, n))
+        else:
+            results.append(entropy_h(sample, n))
     return sum(results) / len(results)
 
 def save_to_excel(letter_freqs: dict, bigrams_overlap: dict, bigrams_no_overlap: dict, filename="entropy_analysis.xlsx"):
@@ -58,7 +67,6 @@ def save_to_excel(letter_freqs: dict, bigrams_overlap: dict, bigrams_no_overlap:
     ws_bi_no.append(["Bigram", "Frequency"])
     for bg, freq in sorted(bigrams_no_overlap.items(), key=lambda item: item[1], reverse=True):
         ws_bi_no.append([bg, freq])
-
 
     wb.save(filename)
     print(f"\nЧастоти збережено у файл: {filename}")
@@ -94,22 +102,37 @@ def main():
     print(f"Максимальна ентропія H_0 = log2({M}) = {h0:.4f} біт/символ")
     print("-" * 45)
 
+    # Ентропія з перетинами
     for n in [1, 2]:
-        hn = entropy_experiments(text, n, trials=50, length=5000)
-        redundancy = 1 - (hn / h0)
-        print(f"Модель {n}-грам:")
-        print(f"  Ентропія H_{n} ≈ {hn:.4f} біт/символ")
-        print(f"  Надлишковість R_{n} ≈ {redundancy:.1%}")
+        hn_overlap = entropy_experiments(text, n, trials=50, length=5000)
+        redundancy_overlap = 1 - (hn_overlap / h0)
+        print(f"Модель {n}-грам (з перетинами):")
+        print(f"  Ентропія H_{n} ≈ {hn_overlap:.4f} біт/символ")
+        print(f"  Надлишковість R_{n} ≈ {redundancy_overlap:.1%}")
+
+        if n == 2:
+            hn_no_overlap = entropy_experiments(text, n, trials=50, length=5000, no_overlap=True)
+            redundancy_no_overlap = 1 - (hn_no_overlap / h0)
+            print(f"Модель {n}-грам (без перетинів):")
+            print(f"  Ентропія H_{n} ≈ {hn_no_overlap:.4f} біт/символ")
+            print(f"  Надлишковість R_{n} ≈ {redundancy_no_overlap:.1%}")
 
     print("\nАналіз без пробілів ('_'):")
     text_no_space = text.replace("_", "")
 
     for n in [1, 2]:
-        hn = entropy_experiments(text_no_space, n, trials=50, length=5000)
-        redundancy = 1 - (hn / h0)
-        print(f"Модель {n}-грам (без пробілів):")
-        print(f"  Ентропія H_{n} ≈ {hn:.4f} біт/символ")
-        print(f"  Надлишковість R_{n} ≈ {redundancy:.1%}")
+        hn_overlap = entropy_experiments(text_no_space, n, trials=50, length=5000)
+        redundancy_overlap = 1 - (hn_overlap / h0)
+        print(f"Модель {n}-грам (з перетинами, без пробілів):")
+        print(f"  Ентропія H_{n} ≈ {hn_overlap:.4f} біт/символ")
+        print(f"  Надлишковість R_{n} ≈ {redundancy_overlap:.1%}")
+
+        if n == 2:
+            hn_no_overlap = entropy_experiments(text_no_space, n, trials=50, length=5000, no_overlap=True)
+            redundancy_no_overlap = 1 - (hn_no_overlap / h0)
+            print(f"Модель {n}-грам (без перетинів, без пробілів):")
+            print(f"  Ентропія H_{n} ≈ {hn_no_overlap:.4f} біт/символ")
+            print(f"  Надлишковість R_{n} ≈ {redundancy_no_overlap:.1%}")
 
     save_to_excel(freqs_letters, freqs_bigrams_overlap, freqs_bigrams_no_overlap)
 
