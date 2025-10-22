@@ -5,20 +5,21 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import openpyxl 
 import numpy as np
+import os
 
-def read_text(filename):
-    f = open(filename, "r", encoding="utf-8")
+def read_text(io_dir, filename):
+    f = open(f"{io_dir}\\{filename}", "r", encoding="utf-8")
     text = f.read()
     f.close()
     return text
 
-def filt_text(text, filename = "text.txt"):
+def filt_text(text, io_dir, filename = "text.txt"):
     text = re.sub(r"[^а-яА-ЯёЁ]+", "", text) # очистимо текст від зайвих символів
     text = text.lower()
     text = text.replace("ё", "е")
 
     clean_filename = "clean_" + filename
-    f = open(clean_filename, "w", encoding="utf-8")
+    f = open(f"{io_dir}\\{clean_filename}", "w", encoding="utf-8")
     f.write(text)
     f.close()
 
@@ -118,10 +119,10 @@ def symbol_match_by_rank(text, r): # D_r = sum_i(δ(y_i,y_i+1)), i є [1, n-r]
 
     return D_r
 
-def dict_visualization(dct, columns, title, yrange=[0, 0.06, 0.005]):
+def dict_visualization(output_dir, dct, columns, title, yrange=[0, 0.06, 0.005]):
     df = pd.DataFrame(list(dct.items()), columns=columns)
     print(f"{df.to_string(index=False)}\n")
-    df.to_excel(f"{columns[1]}By{columns[0]}.xlsx", index=False)
+    df.to_excel(f"{output_dir}\\{columns[1]}By{columns[0]}.xlsx", index=False)
 
     # Порівняємо графічно
     plt.figure()
@@ -133,6 +134,8 @@ def dict_visualization(dct, columns, title, yrange=[0, 0.06, 0.005]):
     plt.xticks(rotation=45)
     plt.yticks(np.arange(yrange[0], yrange[1], yrange[2]))
     plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(f"{output_dir}\\{columns[1]}By{columns[0]}.png", dpi=300)
 
 def vigenere_key_freq_decrypt(message, KeyLen, letter_x, alphabet):
     n = len(alphabet)
@@ -167,17 +170,25 @@ def vigenere_key_freq_decrypt(message, KeyLen, letter_x, alphabet):
 
 def main():
     alphabet = "абвгдежзийклмнопрстуфхцчшщъыьэюя"
+    input_dir = "input"
+    output_dir = "output"
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
+
+    if not os.path.exists(input_dir):
+        os.mkdir(output_dir)
+        print(f"папка {input_dir} порожня, будь-ласка, помістіть в неї файли для обробки")
 
     # PART 1
     filename = "Nekrasov_Zelenyu_shum.txt"
-    text = read_text(filename)
-    text = filt_text(text, filename)
+    text = read_text(input_dir, filename)
+    text = filt_text(text, output_dir, filename)
     print(f"ВТ: {text[:80]}...\n")
     
     keys = ["он","код", "свет", "весна", "добродушно", "улыбнисьнам", "солнцевнутри", "кошачьямилота", "улыбайсяпочаще", "чудноемгновение", 
             "шестьдесятдевять", "радостькаждогодня", "ловичудесныймомент", "пустьденьбудетярким", "пустьденьбудеттеплым"]
 
-    f = open(f"encrypted_{filename}", "w", encoding="utf-8")
+    f = open(f"{output_dir}\\encrypted_{filename}", "w", encoding="utf-8")
     f.write(f"ВТ: {text}\n\n")
 
     enc_texts = {}
@@ -201,19 +212,19 @@ def main():
     for k, enc_text in enc_texts.items():
         indexes_of_coincidence[k] = index_of_coincidence(enc_text, alphabet)
     
-    dict_visualization(indexes_of_coincidence, ["KeyLens", "IC"], "Index Of Coincidence for different key lens", [0, 0.06, 0.005])
+    dict_visualization(output_dir, indexes_of_coincidence, ["KeyLens", "IC"], "Index Of Coincidence for different key lens", [0, 0.06, 0.005])
 
     # PART 2
     filename2 = "var11.txt"
-    ct = read_text(filename2)
+    ct = read_text(input_dir, filename2)
     #ОПЦІОНАЛЬНО
-    #ct = filt_text(ct, filename2)
+    #ct = filt_text(ct, output_dir, filename2)
 
     symbol_matches_by_ranks = {}
     for r in range(1, 33):
         symbol_matches_by_ranks[r] = symbol_match_by_rank(ct, r)
 
-    dict_visualization(symbol_matches_by_ranks, ["Rank", "SymbolMatch"], "Symbol match for different ranks", [0, 500, 50])
+    dict_visualization(output_dir, symbol_matches_by_ranks, ["Rank", "SymbolMatch"], "Symbol match for different ranks", [0, 500, 50])
     
     KeyLen = max(symbol_matches_by_ranks, key=symbol_matches_by_ranks.get) # шукана довжина ключа
     print(f"Знайдено довжину ключа: {KeyLen}")
@@ -238,7 +249,7 @@ def main():
     print(f"ШТ: {ct[:80]}...")
     print(f"ВТ: {dec_ct[:80]}...")
 
-    f = open(f"decrypted_{filename2}", "w", encoding="utf-8")
+    f = open(f"{output_dir}\\decrypted_{filename2}", "w", encoding="utf-8")
     f.write(f"ШТ: {ct}\n")
     f.write(f"К: {key}\n")
     f.write(f"ВТ: {dec_ct}\n")
