@@ -8,7 +8,8 @@ import numpy as np
 import os
 
 def read_text(io_dir, filename):
-    f = open(f"{io_dir}\\{filename}", "r", encoding="utf-8")
+    path = os.path.join(io_dir, filename)
+    f = open(path, "r", encoding="utf-8")
     text = f.read()
     f.close()
     return text
@@ -19,7 +20,8 @@ def filt_text(text, io_dir, filename = "text.txt"):
     text = text.replace("ё", "е")
 
     clean_filename = "clean_" + filename
-    f = open(f"{io_dir}\\{clean_filename}", "w", encoding="utf-8")
+    path = os.path.join(io_dir, clean_filename)
+    f = open(path, "w", encoding="utf-8")
     f.write(text)
     f.close()
 
@@ -122,7 +124,9 @@ def symbol_match_by_rank(text, r): # D_r = sum_i(δ(y_i,y_i+1)), i є [1, n-r]
 def dict_visualization(output_dir, dct, columns, title, yrange=[0, 0.06, 0.005]):
     df = pd.DataFrame(list(dct.items()), columns=columns)
     print(f"{df.to_string(index=False)}\n")
-    df.to_excel(f"{output_dir}\\{columns[1]}By{columns[0]}.xlsx", index=False)
+    
+    path = os.path.join(output_dir, f"{columns[1]}By{columns[0]}.xlsx")
+    df.to_excel(path, index=False)
 
     # Порівняємо графічно
     plt.figure()
@@ -135,7 +139,8 @@ def dict_visualization(output_dir, dct, columns, title, yrange=[0, 0.06, 0.005])
     plt.yticks(np.arange(yrange[0], yrange[1], yrange[2]))
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig(f"{output_dir}\\{columns[1]}By{columns[0]}.png", dpi=300)
+    path = os.path.join(output_dir, f"{columns[1]}By{columns[0]}.png")
+    plt.savefig(path, dpi=300)
 
 def vigenere_key_freq_decrypt(message, KeyLen, letter_x, alphabet):
     n = len(alphabet)
@@ -171,7 +176,7 @@ def main():
         os.mkdir(output_dir)
 
     if not os.path.exists(input_dir):
-        os.mkdir(output_dir)
+        os.mkdir(input_dir)
         print(f"папка {input_dir} порожня, будь-ласка, помістіть в неї файли для обробки")
 
     # PART 1
@@ -183,7 +188,8 @@ def main():
     keys = ["он","код", "свет", "весна", "добродушно", "улыбнисьнам", "солнцевнутри", "кошачьямилота", "улыбайсяпочаще", "чудноемгновение", 
             "шестьдесятдевять", "радостькаждогодня", "ловичудесныймомент", "пустьденьбудетярким", "пустьденьбудеттеплым"]
 
-    f = open(f"{output_dir}\\encrypted_{filename}", "w", encoding="utf-8")
+    path = os.path.join(output_dir, f"encrypted_{filename}")
+    f = open(path, "w", encoding="utf-8")
     f.write(f"ВТ: {text}\n\n")
 
     enc_texts = {}
@@ -244,7 +250,8 @@ def main():
     print(f"ШТ: {ct[:1000]}...")
     print(f"ВТ: {dec_ct[:1000]}...")
 
-    f = open(f"{output_dir}\\decrypted_{filename2}", "w", encoding="utf-8")
+    path = os.path.join(output_dir, f"decrypted_{filename2}")
+    f = open(path, "w", encoding="utf-8")
     f.write(f"ШТ: {ct}\n")
     f.write(f"К: {key}\n")
     f.write(f"ВТ: {dec_ct}\n")
