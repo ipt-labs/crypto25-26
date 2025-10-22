@@ -148,12 +148,7 @@ def vigenere_key_freq_decrypt(message, KeyLen, letter_x, alphabet):
     for i in range(KeyLen):
         y = message[i::KeyLen]
 
-        counts, total = count_letters(y, alphabet)
-        if total == 0:
-            print(f"[COL {i}] Порожній стовпчик → ki=0")
-            k.append(0)
-            continue
-
+        counts, _ = count_letters(y, alphabet)
         max_letter_y = max(counts, key=counts.get) # y* (якщо в кількість букви максимальна, то, відповідно, і частота теж)
 
         ki = (abc[max_letter_y] -  abc[letter_x]) % n
@@ -221,10 +216,10 @@ def main():
     #ct = filt_text(ct, output_dir, filename2)
 
     symbol_matches_by_ranks = {}
-    for r in range(1, 33):
+    for r in range(2, 33):
         symbol_matches_by_ranks[r] = symbol_match_by_rank(ct, r)
 
-    dict_visualization(output_dir, symbol_matches_by_ranks, ["Rank", "SymbolMatch"], "Symbol match for different ranks", [0, 500, 50])
+    dict_visualization(output_dir, symbol_matches_by_ranks, ["Rank", "SymMatch"], "Symbol match for different ranks", [0, 500, 50])
     
     KeyLen = max(symbol_matches_by_ranks, key=symbol_matches_by_ranks.get) # шукана довжина ключа
     print(f"Знайдено довжину ключа: {KeyLen}")
@@ -246,8 +241,8 @@ def main():
     print(f"Отримали ключ: {key}")
 
     dec_ct = vigenere_decrypt(ct, key, alphabet)
-    print(f"ШТ: {ct[:80]}...")
-    print(f"ВТ: {dec_ct[:80]}...")
+    print(f"ШТ: {ct[:1000]}...")
+    print(f"ВТ: {dec_ct[:1000]}...")
 
     f = open(f"{output_dir}\\decrypted_{filename2}", "w", encoding="utf-8")
     f.write(f"ШТ: {ct}\n")
@@ -255,7 +250,6 @@ def main():
     f.write(f"ВТ: {dec_ct}\n")
 
     plt.show() # відобразимо наші графіки
-    
     
 if __name__ == "__main__":
     main()
