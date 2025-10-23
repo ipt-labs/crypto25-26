@@ -1,0 +1,100 @@
+import argparse
+import itertools
+import os
+from chardet import UniversalDetector
+import magic
+import pandas as pd
+from helpers.styles import print_error, print_green_blue_colored_pair, print_df
+from helpers.modular_arithmetic import modular_linear_equation, gcd
+from helpers.text_stats import *
+from bigram_affine_cipher import BigramAffineCipher
+from colorama import Fore, Style
+
+# this alphabet is for decrypting files in "variants" folder
+# to decrypt file in "for_test" use абвгдежзийклмнопрстуфхцчшщыьэюя
+alphabet = "абвгдежзийклмнопрстуфхцчшщьыэюя"
+alphabet_len = len(alphabet)
+modulus = alphabet_len ** 2
+most_common_bigrams = ["ст",  "но",  "то",  "на",  "ен"]
+
+def process_text(content:str):
+    text_stats_calc = TextStats(alphabet)
+    affine_bg_cipher = BigramAffineCipher(alphabet)
+
+    content = ''.join(ch for ch in content.lower() if ch in alphabet)
+
+    bigr_occurences = text_stats_calc.bigram_occurrences(content)
+    bigrs_sorted = sorted(bigr_occurences, key=bigr_occurences.get, reverse=True)
+    most_common_bigrams_in_ct = []
+    for i in range(len(bigrs_sorted)):
+        if i < 5 or bigrs_sorted[i-1] == bigrs_sorted[i]:
+            most_common_bigrams_in_ct.append(bigrs_sorted[i])
+    print(Fore.LIGHTGREEN_EX + "The most common bigrams in ct:" + Style.RESET_ALL)
+    print_df(pd.DataFrame([bigr_occurences[k] for k in most_common_bigrams_in_ct], index=most_common_bigrams_in_ct).T)
+
+    processed = set()
+
+    for (i, j) in itertools.product(range(len(most_common_bigrams)), range(len(most_common_bigrams_in_ct))):
+        x_1 = affine_bg_cipher.bigram_to_int(most_common_bigrams[i])
+        y_1 = affine_bg_cipher.bigram_to_int(most_common_bigrams_in_ct[j])
+        
+        for (k, l) in itertools.product(range(len(most_common_bigrams)), range(len(most_common_bigrams_in_ct))):
+            if i==k or j==l:
+                continue
+            
+            x_2 = affine_bg_cipher.bigram_to_int(most_common_bigrams[k])
+            y_2 = affine_bg_cipher.bigram_to_int(most_common_bigrams_in_ct[l])
+            
+            solutions = modular_linear_equation(x_1 - x_2, y_1 - y_2, modulus)
+
+            for a in solutions:
+                b = (y_1 - a * x_1) % modulus
+                if ((a,b)in processed): 
+                    continue
+                processed.add((a,b))
+
+                if gcd(a,modulus) != 1:
+                    continue
+
+                pt = affine_bg_cipher.decrypt(content, a, b)
+
+                monogram_freqs = text_stats_calc.monogram_frequencies(pt)
+                # TODO works fine but consider trying other methods to compare
+                if text_stats_calc.calc_entropy(monogram_freqs) < 4.5:
+                    print_green_blue_colored_pair("Key:", f"({a},{b})")
+                    print_green_blue_colored_pair("Decryption result:", f"\n{pt}")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument("-f",dest="file",type=str, required=True, help="File to decrypt")
+    args = parser.parse_args()
+
+    file_path = args.file
+    if file_path:
+        print(Fore.LIGHTGREEN_EX + 35*"==" + "\n" + 35*"==" + Style.RESET_ALL)
+        if not os.path.exists(file_path):
+            print_error(f"{file_path} does not exists")
+        else:
+            if os.path.isdir(file_path):
+                print_error(f"{file_path} is dir")
+            else:
+                file_type = magic.from_file(file_path,mime=True)
+                print_green_blue_colored_pair(f"File type of {file_path}:", file_type)
+                if "text" not in file_type:
+                    print_error("Please, provide text file")
+                else:   
+                    # TODO investigate failures in some cases
+                    detector = UniversalDetector()
+                    with open(file_path, 'rb') as f:
+                        for line in f.readlines():
+                            detector.feed(line)
+                            if detector.done: break
+                        detector.close()
+                    detection_result = detector.result
+                    if detection_result:
+                        print_green_blue_colored_pair("Encoding detection result:", detection_result)
+                        with open(file_path, encoding=detector.result['encoding']) as f:
+                            process_text(f.read())
+                    else:
+                        print_error("Failed to detect encoding")
