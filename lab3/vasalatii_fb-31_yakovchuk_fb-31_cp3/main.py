@@ -29,6 +29,8 @@ def process_text(content:str):
     for i in range(len(bigrs_sorted)):
         if i < 5 or bigrs_sorted[i-1] == bigrs_sorted[i]:
             most_common_bigrams_in_ct.append(bigrs_sorted[i])
+        else:
+            break
     print(Fore.LIGHTGREEN_EX + "The most common bigrams in ct:" + Style.RESET_ALL)
     print_df(pd.DataFrame([bigr_occurences[k] for k in most_common_bigrams_in_ct], index=most_common_bigrams_in_ct).T)
 
