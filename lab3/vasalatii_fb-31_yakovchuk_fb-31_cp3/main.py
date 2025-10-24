@@ -13,11 +13,13 @@ from colorama import Fore, Style
 # this alphabet is for decrypting files in "variants" folder
 # to decrypt file in "for_test" use абвгдежзийклмнопрстуфхцчшщыьэюя
 alphabet = "абвгдежзийклмнопрстуфхцчшщьыэюя"
+#alphabet = "абвгдежзийклмнопрстуфхцчшщыьэюя"
+
 alphabet_len = len(alphabet)
 modulus = alphabet_len ** 2
 most_common_bigrams = ["ст",  "но",  "то",  "на",  "ен"]
 
-def process_text(content:str, save_basepath: str):
+def process_text(content:str, save_basepath: str, encoding: str) -> None:
     text_stats_calc = TextStats(alphabet)
     affine_bg_cipher = BigramAffineCipher(alphabet)
 
@@ -51,7 +53,7 @@ def process_text(content:str, save_basepath: str):
 
             for a in solutions:
                 b = (y_1 - a * x_1) % modulus
-                if ((a,b)in processed): 
+                if (a,b)in processed:
                     continue
                 processed.add((a,b))
 
@@ -69,7 +71,7 @@ def process_text(content:str, save_basepath: str):
                     print_green_blue_colored_pair("PT H2 (overlapped):",pt_bigram_entr)
                     print_green_blue_colored_pair("Decryption result:", f"\n{pt}")
                     dec_file = f"{save_basepath}_dec_{a}_{b}.txt"
-                    with open(dec_file, "w") as f:
+                    with open(dec_file, "w", encoding=encoding) as f:
                         f.write(pt)
                         print_green_blue_colored_pair("Saved to:", dec_file)
 
@@ -106,6 +108,6 @@ if __name__ == "__main__":
                     if detection_result and detection_result["confidence"] > 0.8:
                         print_green_blue_colored_pair("Encoding detection result:", detection_result)
                         with open(file_path, encoding=detector.result['encoding']) as f:
-                            process_text(f.read(),os.path.join(dec_dir,os.path.basename(file_path).split('.')[0]))
+                            process_text(f.read(), os.path.join(dec_dir,os.path.basename(file_path).split('.')[0]), detector.result['encoding'])
                     else:
                         print_error("Failed to detect encoding")
