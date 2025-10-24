@@ -23,8 +23,8 @@ def process_text(content:str):
 
     content = ''.join(ch for ch in content.lower() if ch in alphabet)
 
-    bigr_occurences = text_stats_calc.bigram_occurrences(content)
-    bigrs_sorted = sorted(bigr_occurences, key=bigr_occurences.get, reverse=True)
+    bigr_frequencies = text_stats_calc.bigram_frequencies(content)
+    bigrs_sorted = sorted(bigr_frequencies, key=bigr_frequencies.get, reverse=True)
     most_common_bigrams_in_ct = []
     for i in range(len(bigrs_sorted)):
         if i < 5 or bigrs_sorted[i-1] == bigrs_sorted[i]:
@@ -32,7 +32,7 @@ def process_text(content:str):
         else:
             break
     print(Fore.LIGHTGREEN_EX + "The most common bigrams in ct:" + Style.RESET_ALL)
-    print_df(pd.DataFrame([bigr_occurences[k] for k in most_common_bigrams_in_ct], index=most_common_bigrams_in_ct).T)
+    print_df(pd.DataFrame([bigr_frequencies[k] for k in most_common_bigrams_in_ct], index=most_common_bigrams_in_ct).T)
 
     processed = set()
 
@@ -60,10 +60,13 @@ def process_text(content:str):
 
                 pt = affine_bg_cipher.decrypt(content, a, b)
 
-                monogram_freqs = text_stats_calc.monogram_frequencies(pt)
-                # TODO works fine but consider trying other methods to compare
-                if text_stats_calc.calc_entropy(monogram_freqs) < 4.5:
+                pt_monogram_entr = text_stats_calc.calc_entropy(text_stats_calc.monogram_frequencies(pt))
+                pt_bigram_entr = text_stats_calc.calc_entropy(text_stats_calc.bigram_frequencies(pt,overlapped=True))
+                if pt_monogram_entr < 4.455 or pt_bigram_entr<4.055:
+                    print(Fore.LIGHTGREEN_EX + 35*"==" + Style.RESET_ALL)
                     print_green_blue_colored_pair("Key:", f"({a},{b})")
+                    print_green_blue_colored_pair("PT H1:",pt_monogram_entr)
+                    print_green_blue_colored_pair("PT H2:",pt_bigram_entr)
                     print_green_blue_colored_pair("Decryption result:", f"\n{pt}")
 
 

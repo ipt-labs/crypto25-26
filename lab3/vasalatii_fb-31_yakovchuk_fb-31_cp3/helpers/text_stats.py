@@ -7,18 +7,24 @@ class TextStats:
             raise ValueError("alphabet should be provided")
         self.alphabet = alphabet
         self.alphabet_len = len(self.alphabet)
-
-    def bigram_occurrences(self, text: str) -> dict[str, int]:
+    
+    def bigram_frequencies(self, text: str, overlapped: bool=False) -> dict[str, float]:
         bigram_count = {c1+c2:0 for c1 in self.alphabet for c2 in self.alphabet}
         if len(text) < 2:
             return bigram_count
-        for i in range(0, len(text)-1, 2):
-            c1 = text[i]
-            c2 = text[i+1]
-            if c1 not in self.alphabet or c2 not in self.alphabet:
-                raise ValueError("text contains chars not from alphabet")
-            bigram_count[c1+c2] += 1
-        return bigram_count
+        total = 0
+        prev_ch = None
+        index = 0
+        for ch in text:
+            if ch not in self.alphabet:
+                raise ValueError("text contains chars not from alphabet")	
+            if prev_ch is not None and (overlapped or index % 2 == 1):
+                bigram_count[prev_ch+ch] += 1
+                total += 1
+            prev_ch = ch
+            index += 1
+        return {bg: bigram_count[bg] / total for bg in bigram_count}
+
 
     def monogram_frequencies(self, text: str) -> dict[str, float]:
         monograms_count = {c: 0 for c in self.alphabet}
