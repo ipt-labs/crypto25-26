@@ -66,7 +66,7 @@ def process_text(content:str, save_basepath: str):
                     print(Fore.LIGHTGREEN_EX + 35*"==" + Style.RESET_ALL)
                     print_green_blue_colored_pair("Key:", f"({a},{b})")
                     print_green_blue_colored_pair("PT H1:",pt_monogram_entr)
-                    print_green_blue_colored_pair("PT H2:",pt_bigram_entr)
+                    print_green_blue_colored_pair("PT H2 (overlapped):",pt_bigram_entr)
                     print_green_blue_colored_pair("Decryption result:", f"\n{pt}")
                     dec_file = f"{save_basepath}_dec_{a}_{b}.txt"
                     with open(dec_file, "w") as f:
@@ -96,7 +96,6 @@ if __name__ == "__main__":
                 if "text" not in file_type:
                     print_error("Please, provide text file")
                 else:   
-                    # TODO investigate failures in some cases
                     detector = UniversalDetector()
                     with open(file_path, 'rb') as f:
                         for line in f.readlines():
@@ -104,7 +103,7 @@ if __name__ == "__main__":
                             if detector.done: break
                         detector.close()
                     detection_result = detector.result
-                    if detection_result:
+                    if detection_result and detection_result["confidence"] > 0.8:
                         print_green_blue_colored_pair("Encoding detection result:", detection_result)
                         with open(file_path, encoding=detector.result['encoding']) as f:
                             process_text(f.read(),os.path.join(dec_dir,os.path.basename(file_path).split('.')[0]))
