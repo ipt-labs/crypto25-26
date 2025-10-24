@@ -17,7 +17,7 @@ alphabet_len = len(alphabet)
 modulus = alphabet_len ** 2
 most_common_bigrams = ["ст",  "но",  "то",  "на",  "ен"]
 
-def process_text(content:str):
+def process_text(content:str, save_basepath: str):
     text_stats_calc = TextStats(alphabet)
     affine_bg_cipher = BigramAffineCipher(alphabet)
 
@@ -68,12 +68,19 @@ def process_text(content:str):
                     print_green_blue_colored_pair("PT H1:",pt_monogram_entr)
                     print_green_blue_colored_pair("PT H2:",pt_bigram_entr)
                     print_green_blue_colored_pair("Decryption result:", f"\n{pt}")
+                    dec_file = f"{save_basepath}_dec_{a}_{b}.txt"
+                    with open(dec_file, "w") as f:
+                        f.write(pt)
+                        print_green_blue_colored_pair("Saved to:", dec_file)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument("-f",dest="file",type=str, required=True, help="File to decrypt")
     args = parser.parse_args()
+
+    dec_dir = "decrypted"
+    os.makedirs(dec_dir,exist_ok=True)
 
     file_path = args.file
     if file_path:
@@ -100,6 +107,6 @@ if __name__ == "__main__":
                     if detection_result:
                         print_green_blue_colored_pair("Encoding detection result:", detection_result)
                         with open(file_path, encoding=detector.result['encoding']) as f:
-                            process_text(f.read())
+                            process_text(f.read(),os.path.join(dec_dir,os.path.basename(file_path).split('.')[0]))
                     else:
                         print_error("Failed to detect encoding")
