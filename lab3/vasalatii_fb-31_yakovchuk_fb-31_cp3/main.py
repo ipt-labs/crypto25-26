@@ -62,7 +62,7 @@ def process_text(content:str, save_basepath: str):
 
                 pt_monogram_entr = text_stats_calc.calc_entropy(text_stats_calc.monogram_frequencies(pt))
                 pt_bigram_entr = text_stats_calc.calc_entropy(text_stats_calc.bigram_frequencies(pt,overlapped=True))
-                if pt_monogram_entr < 4.455 or pt_bigram_entr<4.055:
+                if pt_monogram_entr < 4.455 or pt_bigram_entr<4.125:
                     print(Fore.LIGHTGREEN_EX + 35*"==" + Style.RESET_ALL)
                     print_green_blue_colored_pair("Key:", f"({a},{b})")
                     print_green_blue_colored_pair("PT H1:",pt_monogram_entr)
