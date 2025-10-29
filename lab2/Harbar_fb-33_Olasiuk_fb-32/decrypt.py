@@ -1,6 +1,6 @@
 from collections import Counter
 
-alphabet = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя"
+alphabet = "абвгдежзийклмнопрстуфхцчшщъыьэюя"
 m = len(alphabet)
 russ_freq = {
     'о': 0.10983, 'е': 0.08483, 'а': 0.07998, 'и': 0.07367, 'н': 0.06700,
@@ -97,7 +97,7 @@ def test_key(ciphertext, key):
         print("мабуть неправильне дешифрування")
     return decrypted
 
-ciphertext = read_file('olani.txt')
+ciphertext = read_file('.txt')
 if not ciphertext:
     exit()
 
