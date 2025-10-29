@@ -1,0 +1,9 @@
+File                      | IoC                 
+------------------------------------------------
+filtered_text.txt         | 0.05690272          
+ciphertext_key2.txt       | 0.04554231          
+ciphertext_key3.txt       | 0.03891193          
+ciphertext_key10.txt      | 0.03598464          
+ciphertext_key16.txt      | 0.03527696          
+ciphertext_key5.txt       | 0.03502887          
+ciphertext_key4.txt       | 0.03453269          
