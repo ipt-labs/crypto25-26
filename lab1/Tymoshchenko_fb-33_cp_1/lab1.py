@@ -68,14 +68,10 @@ def entropy(probabilities):
 
 
 # H2
-def conditional_entropy(letter_freq, bigram_freq):
+def conditional_entropy(bigram_freq):
     H2 = 0.0
     for bg, p_xy in bigram_freq.items():
-        x, y = bg[0], bg[1]
-        p_x = letter_freq.get(x, 0)
-        if p_x > 0:
-            p_y_given_x = p_xy / p_x
-            H2 -= p_xy * math.log2(p_y_given_x)
+        H2 -= (p_xy * math.log2(p_xy)) / 2
     return H2
 
 
@@ -89,12 +85,12 @@ if __name__ == "__main__":
     letter_freq, letter_freq_ns = letter_frequencies(text)
     bigram_freq_overlap = bigram_frequencies(text, overlapping=True)
     H1 = entropy(letter_freq)
-    H2_overlap = conditional_entropy(letter_freq, bigram_freq_overlap)
+    H2_overlap = conditional_entropy(bigram_freq_overlap)
     table_overlap = create_bigram_table(bigram_freq_overlap)
     table_overlap.to_csv("results/з_пробілами_з_перекриттям.csv", sep=";", encoding="utf-8-sig")
     #без перекриття
     bigram_freq_nonoverlap = bigram_frequencies(text, overlapping=False)
-    H2_nonoverlap = conditional_entropy(letter_freq, bigram_freq_nonoverlap)
+    H2_nonoverlap = conditional_entropy(bigram_freq_nonoverlap)
     table_nonoverlap = create_bigram_table(bigram_freq_nonoverlap)
     table_nonoverlap.to_csv("results/з_пробілами_без_перекриття.csv", sep=";", encoding="utf-8-sig")
 
@@ -102,12 +98,12 @@ if __name__ == "__main__":
     text_no_spaces = text.replace(" ", "")
     bigram_freq_ns_overlap = bigram_frequencies(text_no_spaces, overlapping=True)
     H1_ns = entropy(letter_freq_ns)
-    H2_ns_overlap = conditional_entropy(letter_freq_ns, bigram_freq_ns_overlap)
+    H2_ns_overlap = conditional_entropy(bigram_freq_ns_overlap)
     table_ns_overlap = create_bigram_table(bigram_freq_ns_overlap)
     table_ns_overlap.to_csv("results/без_пробілів_з_перекриттям.csv", sep=";", encoding="utf-8-sig")
 
     bigram_freq_ns_nonoverlap = bigram_frequencies(text_no_spaces, overlapping=False)
-    H2_ns_nonoverlap = conditional_entropy(letter_freq_ns, bigram_freq_ns_nonoverlap)
+    H2_ns_nonoverlap = conditional_entropy(bigram_freq_ns_nonoverlap)
     table_ns_nonoverlap = create_bigram_table(bigram_freq_ns_nonoverlap)
     table_ns_nonoverlap.to_csv("results/без_пробілів_без_перекриття.csv", sep=";", encoding="utf-8-sig")
 
