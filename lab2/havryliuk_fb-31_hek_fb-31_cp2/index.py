@@ -1,10 +1,12 @@
 import pathlib
 from collections import Counter
 from os.path import exists
+import matplotlib.pyplot as plt
 
 ALPHABET = "абвгдежзийклмнопрстуфхцчшщъыьэюя"
 M = len(ALPHABET)
 OUTPUT_FILENAME = "ioc_results.txt"
+OUTPUT_DIAGRAM = "ioc_diagram.png"
 
 
 def calculate_ioc(text):
@@ -77,6 +79,35 @@ def main():
         print(f"Results written to {OUTPUT_FILENAME}")
     except IOError as e:
         print(e)
+
+    print(f"\nCreating diagram '{OUTPUT_DIAGRAM}'...")
+    try:
+        file_names = [r[0].name for r in results]
+        ioc_values = [r[1] for r in results]
+
+        file_names.reverse()
+        ioc_values.reverse()
+
+        plt.figure(figsize=(12, 7))
+
+        plt.barh(file_names, ioc_values, color='steelblue')
+
+        plt.xlabel("Індекс відповідності (IoC)")
+        plt.ylabel("Файл")
+        plt.title("Індекси відповідності для текстів")
+
+        plt.grid(axis='x', linestyle='--', alpha=0.7)
+
+        for index, value in enumerate(ioc_values):
+            plt.text(value, index, f" {value:.6f}", va='center')
+
+        plt.tight_layout()
+
+        plt.savefig(OUTPUT_DIAGRAM)
+        print(f"Diagram successfully saved to '{OUTPUT_DIAGRAM}'")
+
+    except Exception as e:
+        print(f"An error occurred while creating the diagram: {e}")
 
 
 if __name__ == "__main__":
