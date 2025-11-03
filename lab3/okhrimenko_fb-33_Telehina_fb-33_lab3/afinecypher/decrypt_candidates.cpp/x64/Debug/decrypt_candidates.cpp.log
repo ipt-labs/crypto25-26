@@ -1,5 +1,7 @@
 ﻿  decrypt_candidates.cpp
-D:\Crypto\crypto25-26\lab3\okhrimenko_fb-33_Telehina_fb-33_lab3\afinecypher\decrypt_candidates.cpp\decrypt_candidates.cpp(33,12): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\Crypto\crypto25-26\lab3\okhrimenko_fb-33_Telehina_fb-33_lab3\afinecypher\decrypt_candidates.cpp\decrypt_candidates.cpp(34,12): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\Crypto\crypto25-26\lab3\okhrimenko_fb-33_Telehina_fb-33_lab3\afinecypher\decrypt_candidates.cpp\decrypt_candidates.cpp(41,12): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
+D:\Crypto\crypto25-26\lab3\okhrimenko_fb-33_Telehina_fb-33_lab3\afinecypher\decrypt_candidates.cpp\decrypt_candidates.cpp(55,11): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\Crypto\crypto25-26\lab3\okhrimenko_fb-33_Telehina_fb-33_lab3\afinecypher\decrypt_candidates.cpp\decrypt_candidates.cpp(56,12): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\Crypto\crypto25-26\lab3\okhrimenko_fb-33_Telehina_fb-33_lab3\afinecypher\decrypt_candidates.cpp\decrypt_candidates.cpp(57,12): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\Crypto\crypto25-26\lab3\okhrimenko_fb-33_Telehina_fb-33_lab3\afinecypher\decrypt_candidates.cpp\decrypt_candidates.cpp(76,11): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\Crypto\crypto25-26\lab3\okhrimenko_fb-33_Telehina_fb-33_lab3\afinecypher\decrypt_candidates.cpp\decrypt_candidates.cpp(99,11): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   decrypt_candidates.cpp.vcxproj -> D:\Crypto\crypto25-26\lab3\okhrimenko_fb-33_Telehina_fb-33_lab3\afinecypher\x64\Debug\decrypt_candidates.exe
