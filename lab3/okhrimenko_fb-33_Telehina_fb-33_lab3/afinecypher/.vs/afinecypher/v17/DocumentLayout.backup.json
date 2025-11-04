@@ -1,0 +1,41 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Crypto\\crypto25-26\\lab3\\okhrimenko_fb-33_Telehina_fb-33_lab3\\afinecypher\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{F53B7D05-0F46-43BE-A0A3-06A598D1F095}|decrypt_candidates.cpp\\decrypt_candidates.cpp.vcxproj|D:\\Crypto\\crypto25-26\\lab3\\okhrimenko_fb-33_Telehina_fb-33_lab3\\afinecypher\\decrypt_candidates.cpp\\decrypt_candidates.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{F53B7D05-0F46-43BE-A0A3-06A598D1F095}|decrypt_candidates.cpp\\decrypt_candidates.cpp.vcxproj|solutionrelative:decrypt_candidates.cpp\\decrypt_candidates.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "decrypt_candidates.cpp",
+              "DocumentMoniker": "D:\\Crypto\\crypto25-26\\lab3\\okhrimenko_fb-33_Telehina_fb-33_lab3\\afinecypher\\decrypt_candidates.cpp\\decrypt_candidates.cpp",
+              "RelativeDocumentMoniker": "decrypt_candidates.cpp\\decrypt_candidates.cpp",
+              "ToolTip": "D:\\Crypto\\crypto25-26\\lab3\\okhrimenko_fb-33_Telehina_fb-33_lab3\\afinecypher\\decrypt_candidates.cpp\\decrypt_candidates.cpp",
+              "RelativeToolTip": "decrypt_candidates.cpp\\decrypt_candidates.cpp",
+              "ViewState": "AgIAAI4AAAAAAAAAAAApwL0AAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-11-03T19:17:11.99Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
