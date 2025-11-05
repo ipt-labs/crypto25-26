@@ -25,6 +25,7 @@ def filt_text(text, io_dir, filename = "text.txt"):
     f.close()
 
     return text
+
 def gcd(a, b):
     while b > 0:
         # q = a // b
@@ -96,7 +97,7 @@ def linear_comparison(a, b, m):
         solutions.append(solution)
     return solutions
 
-def count_ngrams(text, alphabet, overlap=False, n = 2):
+def count_ngrams(text, alphabet, n = 2, overlap=False):
     total_count = 0
     counts = {}
 
@@ -142,11 +143,11 @@ def dict_visualization(output_dir, dct, columns, sort):
 
 def bigram_to_num(bigram, alphabet, n):
     x1 = alphabet.index(bigram[0])
-    x2 = alphabet.index(bigram[1])
+    x2 = alphabet.index(bigram[1]) 
     return x1 * n + x2 # X = x1*n + x2, Y = y1*n + y2
 
 def num_to_bigram(bigram, alphabet, n):
-    b1 = bigram // n
+    b1 = bigram // n 
     b2 = bigram % n
     return alphabet[b1] + alphabet[b2]
 
@@ -190,8 +191,63 @@ def afinne_key_freq_decrypt(X1_bigram, X2_bigram, Y1_bigram, Y2_bigram, alphabet
         keys.append([a, b])
     return keys
 
+def rus_lang_detector(text, forbidden_bigrams, top_lang_bigrams, freq_letters_lang, alphabet):
+    counts_m, total_count_m = count_ngrams(text, alphabet, n=1)
+    freqs_m = freq_ngrams(counts_m, total_count_m)
+    counts_b, total_count_b = count_ngrams(text, alphabet, n=2, overlap=True)
+    freqs_b = freq_ngrams(counts_b, total_count_b)
+
+    #Критерій заборонених l-грам
+    count_forbidden = 0
+    for bigram in forbidden_bigrams:
+        freq = freqs_b[bigram]
+        if freq > 0.001:
+            count_forbidden += 1
+    
+    if count_forbidden >= 2: # до прикладу ми аналізуємо текст довжини 1001 символу. Одна описка ОК, дві НЕ ОК
+        return False
+    
+    #Критерій частих l-грам
+    sorted_freqs = sorted(freqs_b.items(), key=lambda x: x[1], reverse=True)[:5]
+
+    top_text_bigrams = []
+    for i in range(len(sorted_freqs)):
+        freq = sorted_freqs[i]
+        bigram = freq[0]
+        top_text_bigrams.append(bigram)
+    
+    count_top_lang = 0
+    for bigram in top_text_bigrams:
+        if bigram in top_lang_bigrams:
+            count_top_lang += 1
+
+    if count_top_lang < 2:
+        return False
+
+    # Перевірка частот частих літер
+    # Гіпотеза: сумарна частота 5-ти найчастіших літер в мові - 41%. Відповідно, частота цих літер в тексті буде +-20% від частоти в мові (33-49%)
+    sorted_lang = sorted(freq_letters_lang.items(), key=lambda x: x[1], reverse=True)
+
+    top5_lang_sum = 0
+    for i in range(5):
+        top5_lang_sum += sorted_lang[i][1]
+
+    sorted_text = sorted(freqs_m.items(), key=lambda x: x[1], reverse=True)
+    top5_text_sum = 0
+    for i in range(5):
+        top5_text_sum += sorted_text[i][1]
+
+    low= top5_lang_sum * 0.8
+    high = top5_lang_sum * 1.2
+
+    if low > top5_text_sum or high < top5_text_sum:
+        return False
+
+    return True
+
 def main():
-    alphabet = "абвгдежзийклмнопрстуфхцчшщыьэюя"
+    # літери ьы поміняні місцями, відповідно до їх розміщення в алфавіті, оскільки шифротекст, як виявилось, чомусь має такий порядок букв
+    alphabet = "абвгдежзийклмнопрстуфхцчшщыьэюя" 
     input_dir = "input"
     output_dir = "output"
     if not os.path.exists(output_dir):
@@ -206,7 +262,7 @@ def main():
     text = filt_text(text, output_dir, filename)
     print(f"ШТ: {text[:80]}...\n")
 
-    counts, total_count = count_ngrams(text, alphabet)
+    counts, total_count = count_ngrams(text, alphabet, n=2)
     freqs = freq_ngrams(counts, total_count)
 
     top_ct_bigrams= dict_visualization(output_dir, freqs, ["Bigram", "Freq"], sort=True)
@@ -226,14 +282,41 @@ def main():
             for a, b in keys:
                 i+=1
                 print(f"{i}: a = {a:4d},  b = {b:4d}")
-                all_keys.append([a, b])
+                if [a, b] not in all_keys:
+                    all_keys.append([a, b])
             print()
 
-    print(f"Знайдено {len(all_keys)} ключів")
+    print(f"Знайдено {len(all_keys)} ключів\n")
 
+    forbidden_bigrams = ["аь", "оь", "еь", "иь", "ыь", "эь", "юь", "яь","ьь", "йь", "ьй", "ьы", "яы"]
+    freq_letters_lang = {'о': 0.1148, 'е': 0.0867, 'а': 0.0757, 'н': 0.0673, 'и': 0.0631, 'т': 0.0621, 'с': 0.057, 'л': 0.0491, 'в': 0.0427,
+                        'р': 0.0424, 'м': 0.036, 'к': 0.034, 'д': 0.0312, 'у': 0.0283, 'п': 0.0264, 'я': 0.0216, 'ы': 0.019, 'ь': 0.0188,
+                        'г': 0.0175, 'з': 0.0166, 'б': 0.0164, 'ч': 0.0156, 'й': 0.0118, 'ж': 0.0102, 'х': 0.0091, 'ш': 0.0082, 'ю': 0.0056,
+                        'э': 0.0046, 'ц': 0.0031, 'щ': 0.0031, 'ф': 0.0016, 'ъ': 0.0003}
+    
+    result = []
+    print("Розшифрування за знайденими ключами та аналіз на відповідність текстів російській мові...")
     for a, b in all_keys:
         dec_text = afinne_decrypt(text, a, b, alphabet)
         #print(f"ВТ: {dec_text[:80]}...\n")
+
+        detect = rus_lang_detector(dec_text, forbidden_bigrams, top_lang_bigrams, freq_letters_lang, alphabet)
+        if detect:
+            print(f"Виявлено потенційний текст: {dec_text[:55]}...\n")
+            result.append([dec_text, a, b])
+    
+    if len(result) == 1:
+        res_text = result[0][0]
+        a = result[0][1]
+        b = result[0][2]
+        print(f"ШТ УСПІШНО РОЗШИФРОВАНО!\nВТ:{res_text}...")
+        print(f"Ключ: ({a}, {b})")
+
+        path = os.path.join(output_dir, f"decrypted_{filename}")
+        f = open(path, "w", encoding="utf-8")
+        f.write(result[0])
+        f.write(f"k = ({a}, {b})")
+        f.close()
 
 if __name__ == "__main__":
     main()
