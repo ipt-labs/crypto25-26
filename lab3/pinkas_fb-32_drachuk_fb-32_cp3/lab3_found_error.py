@@ -207,23 +207,6 @@ def rus_lang_detector(text, forbidden_bigrams, top_lang_bigrams, freq_letters_la
     if count_forbidden >= 2: # до прикладу ми аналізуємо текст довжини 1001 символу. Одна описка ОК, дві НЕ ОК
         return False
     
-    #Критерій частих l-грам
-    sorted_freqs = sorted(freqs_b.items(), key=lambda x: x[1], reverse=True)[:5]
-
-    top_text_bigrams = []
-    for i in range(len(sorted_freqs)):
-        freq = sorted_freqs[i]
-        bigram = freq[0]
-        top_text_bigrams.append(bigram)
-    
-    count_top_lang = 0
-    for bigram in top_text_bigrams:
-        if bigram in top_lang_bigrams:
-            count_top_lang += 1
-
-    if count_top_lang < 2:
-        return False
-
     # Перевірка частот частих літер
     # Гіпотеза: сумарна частота 5-ти найчастіших літер в мові - 41%. Відповідно, частота цих літер в тексті буде +-20% від частоти в мові (33-49%)
     sorted_lang = sorted(freq_letters_lang.items(), key=lambda x: x[1], reverse=True)
@@ -247,7 +230,7 @@ def rus_lang_detector(text, forbidden_bigrams, top_lang_bigrams, freq_letters_la
 
 def main():
     # літери ьы поміняні місцями, відповідно до їх розміщення в алфавіті, оскільки шифротекст, як виявилось, чомусь має такий порядок букв
-    alphabet = "абвгдежзийклмнопрстуфхцчшщьыэюя" 
+    alphabet = "абвгдежзийклмнопрстуфхцчшщыьэюя" 
     input_dir = "input"
     output_dir = "output"
     if not os.path.exists(output_dir):
@@ -312,7 +295,7 @@ def main():
         print(f"ШТ УСПІШНО РОЗШИФРОВАНО!\nВТ:{res_text[:80]}...")
         print(f"Ключ: ({a}, {b})")
 
-        path = os.path.join(output_dir, f"decrypted_{filename}")
+        path = os.path.join(output_dir, f"decrypted_with_error_{filename}")
         f = open(path, "w", encoding="utf-8")
         f.write(res_text)
         f.write(f"k = ({a}, {b})")
