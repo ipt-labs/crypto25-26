@@ -2,12 +2,27 @@ import random
 
 from modular_arithemtic import mod_pow_horner, gcd
 
-def trial_division(n: int) -> bool:
+def sieve_of_eratosthenes(limit:int) -> list[int]:
+    if limit < 2:
+        return []
+    primes = [True for _ in range(limit + 1)]
+    primes[0] = primes[1] = False
+
+    for i in range(2, int(limit**0.5)+1):
+        if primes[i]:
+            for j in range(i*i, limit+1, i):
+                primes[j] = False
+
+    return [i for i in range(limit+1) if primes[i]]
+
+
+primes_for_trial_division = sieve_of_eratosthenes(200)
+
+
+def trial_division(n: int, small_primes:list[int]) -> bool:
     if n < 2:
         return False
-
-    small_primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
-
+    
     for p in small_primes:
         if n == p:
             return True
@@ -16,8 +31,8 @@ def trial_division(n: int) -> bool:
 
     return True
 
-def miller_rabin_test(p: int, k: int=7) -> bool:
-    if not trial_division(p):
+def miller_rabin_test(p: int, k) -> bool:
+    if not trial_division(p, primes_for_trial_division):
         return False
 
     d = p - 1
@@ -59,12 +74,12 @@ def generate_strong_prime(*, bits: int=None, start: int=None, end: int=None) -> 
 
     while True:
         candidate = random.randrange(start, end)
-        if miller_rabin_test(candidate):
+        if miller_rabin_test(candidate,7):
             i = 0
             while True:
                 i += 1
                 p = 2 * i * candidate + 1
                 if p.bit_length() > end.bit_length():
                     break
-                if miller_rabin_test(p):
+                if miller_rabin_test(p,7):
                     return p
