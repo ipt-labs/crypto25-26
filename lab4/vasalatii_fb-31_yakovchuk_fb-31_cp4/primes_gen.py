@@ -15,24 +15,32 @@ def sieve_of_eratosthenes(limit:int) -> list[int]:
 
     return [i for i in range(limit+1) if primes[i]]
 
-
 primes_for_trial_division = sieve_of_eratosthenes(200)
 
+def jacobi_symbol(a:int,p:int) -> int:
+    pass
 
 def fermat_primality_test(p:int,k:int) -> bool:
+    if p < 2:
+        return False
     for _ in range(k):
         x = random.randrange(2, p)
 
-        if gcd(x,p) != 1:
+        if gcd(x,p) != 1 or mod_pow_horner(x,p-1,p) != 1:
             return False
-        
-        if mod_pow_horner(x,p-1,p) != 1:
-            return False
+
     return True   
 
-
 def solovay_strassen_primality_test(p:int,k:int)->bool:
-    pass 
+    if p < 2:
+        return False
+    for _ in range(k):
+        x = random.randrange(2, p)
+
+        if gcd(x,p) != 1 or jacobi_symbol(x,p)%p != mod_pow_horner(x,(p-1)/2,p):
+            return False 
+        
+    return True 
 
 
 def trial_division(n: int, small_primes:list[int]) -> bool:
