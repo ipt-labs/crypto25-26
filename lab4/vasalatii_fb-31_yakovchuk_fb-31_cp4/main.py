@@ -165,22 +165,54 @@ def test_with_remote_api():
 
 
 def test_locally():
-    p1 = generate_strong_prime(bits=256)
-    q1 = generate_strong_prime(bits=256)
-    print_green_blue_colored_pair("P1:", p1)
-    print_green_blue_colored_pair("Q1:", q1)
-    p, q = None, None
-    while True:
-        p = generate_strong_prime(bits=256)
-        max_q = (p1 * q1) // p
-        min_q = 2 ** 255
-        if max_q < min_q:
-            continue
-        q = generate_strong_prime(start=min_q, end=max_q)
-        break
-    print_green_blue_colored_pair("P:", p)
-    print_green_blue_colored_pair("Q:", q)
-    # print(p*q <= p1*q1)
+    print_delimiter()
+    p = generate_strong_prime(bits=256)
+    q = generate_strong_prime(bits=256)
+    key_pair_a = gen_key_pair(p,q, e)
+    print_green_blue_colored_pair("A public key:", key_pair_a.pub_key)
+    print_green_blue_colored_pair("A private key:", key_pair_a.priv_key)
+
+    print_delimiter()
+    p1 = generate_strong_prime(bits=512)
+    q1 = generate_strong_prime(bits=512)
+    key_pair_b = gen_key_pair(p1,q1, e)
+    print_green_blue_colored_pair("B public key:", key_pair_b.pub_key)
+    print_green_blue_colored_pair("B private key:", key_pair_b.priv_key)
+
+    print_delimiter()
+    pt = random.randrange(1,key_pair_a.pub_key[1])
+    print_green_blue_colored_pair("Message:", pt)
+
+    print_delimiter()
+    ct = encrypt(pt,key_pair_a.pub_key[0],key_pair_a.pub_key[1])
+    pt_dec = decrypt(ct,key_pair_a.priv_key[0],key_pair_a.pub_key[1])
+    print_green_blue_colored_pair("Enc msg with A pub key:", ct)
+    print_green_blue_colored_pair("Dec msg with A priv key:", pt_dec)
+
+    print_delimiter()
+    ct = encrypt(pt,key_pair_b.pub_key[0],key_pair_b.pub_key[1])
+    pt_dec = decrypt(ct,key_pair_b.priv_key[0],key_pair_b.pub_key[1])
+    print_green_blue_colored_pair("Enc msg with B pub key:", ct)
+    print_green_blue_colored_pair("Dec msg with B priv key:", pt_dec)
+
+    print_delimiter()
+    _, s = sign(pt, key_pair_a.priv_key[0],key_pair_a.pub_key[1])
+    print_green_blue_colored_pair("Signed message with A priv key:", s)
+    print_green_blue_colored_pair("Verified:", verify(pt,s,key_pair_a.pub_key[0],key_pair_a.pub_key[1]))
+
+    print_delimiter()
+    _, s = sign(pt, key_pair_b.priv_key[0],key_pair_b.pub_key[1])
+    print_green_blue_colored_pair("Signed message with B priv key:", s)
+    print_green_blue_colored_pair("Verified:", verify(pt,s,key_pair_b.pub_key[0],key_pair_b.pub_key[1]))
+
+    print_delimiter()
+    key = random.randrange(1,2**63)
+    print_green_blue_colored_pair("Key:",key)
+    s_key, s = prep_key_for_sending(key, key_pair_a.priv_key[0],key_pair_a.pub_key[1], key_pair_b.pub_key[0],key_pair_b.pub_key[1])
+    print_green_blue_colored_pair("Prepared key for sending:", (s_key, s))
+    r_k = retrieve_key(s_key,s,key_pair_b.priv_key[0],key_pair_b.pub_key[1],key_pair_a.pub_key[0],key_pair_a.pub_key[1])
+    print_green_blue_colored_pair("Retrieved key:", r_k[0])
+    print_green_blue_colored_pair("Verified:",r_k[2])
 
 
 if __name__ == "__main__":
