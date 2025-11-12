@@ -6,6 +6,12 @@ from tabulate import tabulate
 def print_error(error: str) -> None:
 	print(Fore.RED + error + Style.RESET_ALL)
 
+def print_delimiter():
+	print(Fore.LIGHTGREEN_EX + "=="*75 + Style.RESET_ALL)
+
+def print_double_delimiter():
+	print(Fore.LIGHTMAGENTA_EX + "=="*75+"\n"+"=="*75 + Style.RESET_ALL)
+
 def print_green_blue_colored_pair(tag: str, value: str | int | float | dict | tuple[int, ...], indentation: str='') -> None:
 	print(indentation + Fore.LIGHTGREEN_EX + tag + " " + Fore.LIGHTBLUE_EX + str(value) + Style.RESET_ALL)
 
