@@ -1,16 +1,26 @@
 from dataclasses import dataclass
 from modular_arithemtic import modular_inverse, mod_pow_horner
+from primes_gen import generate_strong_prime
 
 @dataclass
 class KeyPair:
     pub_key: tuple[int,int]
     priv_key: tuple[int,int,int]
 
-def gen_key_pair(p:int, q:int, e:int) -> KeyPair:
+e = 2**16+1
+
+def _gen_key_pair(p:int, q:int, e:int) -> KeyPair:
     n = p * q
     phi_n = (p-1) * (q-1)
     d = modular_inverse(e, phi_n)
     return KeyPair(pub_key=(e, n), priv_key=(d, p, q))
+
+def gen_key_pair(bits:int) -> KeyPair:
+    if bits < 256:
+        raise ValueError("please enter key length equal or bigger than 256") 
+    p = generate_strong_prime(bits=bits//2)
+    q = generate_strong_prime(bits=bits//2)
+    return _gen_key_pair(p, q, e)
 
 def encrypt(pt:int, e:int, n:int) -> int:
     if pt >= n:

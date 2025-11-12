@@ -5,7 +5,6 @@ from primes_gen import generate_strong_prime
 from rsa import *
 from requests import get, Session
 
-e = 2**16+1
 API_URL = "http://asymcryptwebservice.appspot.com/rsa/"
 session = Session()
 
@@ -96,10 +95,7 @@ def test_with_remote_api():
     if server_pub_key is None:
         return
 
-    p = generate_strong_prime(bits=256)
-    q = generate_strong_prime(bits=256)
-
-    key_pair = gen_key_pair(p,q, e)
+    key_pair = gen_key_pair(bits=512)
     print_delimiter()
     print_green_blue_colored_pair("Public key:", key_pair.pub_key)
     print_green_blue_colored_pair("Private key:", key_pair.priv_key)
@@ -136,10 +132,7 @@ def test_with_remote_api():
         print_green_blue_colored_pair("Signed message from server:", s)
         print_green_blue_colored_pair("Verified locally:", verify(pt_sm,s,server_pub_key[0],server_pub_key[1]))
 
-    p1 = generate_strong_prime(bits=512)
-    q1 = generate_strong_prime(bits=512)
-
-    key_pair1 = gen_key_pair(p1,q1, e)
+    key_pair1 = gen_key_pair(bits=1024)
     print_delimiter()
     print_green_blue_colored_pair("Public key:", key_pair1.pub_key)
     print_green_blue_colored_pair("Private key:", key_pair1.priv_key)
@@ -166,16 +159,15 @@ def test_with_remote_api():
 
 def test_locally():
     print_delimiter()
-    p = generate_strong_prime(bits=256)
-    q = generate_strong_prime(bits=256)
-    key_pair_a = gen_key_pair(p,q, e)
+    key_pair_a = gen_key_pair(bits=512)
     print_green_blue_colored_pair("A public key:", key_pair_a.pub_key)
     print_green_blue_colored_pair("A private key:", key_pair_a.priv_key)
 
     print_delimiter()
-    p1 = generate_strong_prime(bits=512)
-    q1 = generate_strong_prime(bits=512)
-    key_pair_b = gen_key_pair(p1,q1, e)
+    key_pair_b = gen_key_pair(bits=512)
+    while key_pair_a.pub_key[1] > key_pair_b.pub_key[1]:
+        key_pair_b = gen_key_pair(bits=512)
+        
     print_green_blue_colored_pair("B public key:", key_pair_b.pub_key)
     print_green_blue_colored_pair("B private key:", key_pair_b.priv_key)
 
