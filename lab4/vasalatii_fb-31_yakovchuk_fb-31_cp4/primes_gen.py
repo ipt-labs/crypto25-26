@@ -17,28 +17,54 @@ def sieve_of_eratosthenes(limit:int) -> list[int]:
 
 primes_for_trial_division = sieve_of_eratosthenes(200)
 
-def jacobi_symbol(a:int,p:int) -> int:
-    pass
+def jacobi_symbol(a: int, p: int) -> int:
+    if p <= 0 or p % 2 == 0:
+        raise ValueError("p must be a positive odd integer")
+    a %= p
+    if a < 0:
+        a += p
 
-def fermat_primality_test(p:int,k:int) -> bool:
-    if p < 2:
+    t = 0
+
+    while a:
+        while a % 4 == 0:
+            a //= 4
+        if a % 2 == 0:
+            t ^= p
+            a //= 2
+
+        t ^= a & p & 2
+        a, p = p % a, a
+
+    if p != 1:
+        return 0
+    elif (t ^ (t >> 1)) & 2:
+        return -1
+    else:
+        return 1
+
+
+def fermat_primality_test(p:int, k:int) -> bool:
+    if p < 2 or p % 2 == 0:
         return False
+
     for _ in range(k):
         x = random.randrange(2, p)
 
-        if gcd(x,p) != 1 or mod_pow_horner(x,p-1,p) != 1:
+        if gcd(x, p) != 1 or mod_pow_horner(x, p-1, p) != 1:
             return False
 
     return True   
 
 def solovay_strassen_primality_test(p:int,k:int)->bool:
-    if p < 2:
+    if p < 2 or p % 2 == 0:
         return False
+
     for _ in range(k):
         x = random.randrange(2, p)
 
-        if gcd(x,p) != 1 or jacobi_symbol(x,p)%p != mod_pow_horner(x,(p-1)/2,p):
-            return False 
+        if gcd(x, p) != 1 or jacobi_symbol(x, p) % p != mod_pow_horner(x, (p-1) // 2, p):
+            return False
         
     return True 
 
@@ -81,8 +107,6 @@ def miller_rabin_test(p: int, k:int) -> bool:
             a = mod_pow_horner(a, 2, p)
             if a == p - 1:
                 break
-            elif a == 1:
-                return False
         else:
             return False
 
