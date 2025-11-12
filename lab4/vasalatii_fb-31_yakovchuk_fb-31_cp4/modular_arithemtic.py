@@ -7,6 +7,9 @@ def modular_inverse(a:int, m:int)->int:
         q = a // m
         a, m = m, a % m
         u_0, u_1 = u_1, u_0 - q * u_1
+    
+    if a != 1:
+        raise ValueError(f"cannot find inverse because gcd {a} and {m} is {a}, not 1")
 
     if (u_0 < 0):
         u_0 += start_m

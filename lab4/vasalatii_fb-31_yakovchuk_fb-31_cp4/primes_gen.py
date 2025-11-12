@@ -18,7 +18,7 @@ def sieve_of_eratosthenes(limit:int) -> list[int]:
 primes_for_trial_division = sieve_of_eratosthenes(200)
 
 def jacobi_symbol(a: int, p: int) -> int:
-    if p <= 0 or p % 2 == 0:
+    if p <= 0 or p & 1 == 0:
         raise ValueError("p must be a positive odd integer")
     a %= p
     if a < 0:
@@ -45,7 +45,7 @@ def jacobi_symbol(a: int, p: int) -> int:
 
 
 def fermat_primality_test(p:int, k:int) -> bool:
-    if p < 2 or p % 2 == 0:
+    if p < 2 or p & 1 == 0:
         return False
 
     for _ in range(k):
@@ -57,7 +57,7 @@ def fermat_primality_test(p:int, k:int) -> bool:
     return True   
 
 def solovay_strassen_primality_test(p:int,k:int)->bool:
-    if p < 2 or p % 2 == 0:
+    if p < 2 or p & 1 == 0:
         return False
 
     for _ in range(k):
@@ -87,7 +87,7 @@ def miller_rabin_test(p: int, k:int) -> bool:
 
     d = p - 1
     s = 0
-    while d % 2 == 0:
+    while d & 1 == 0:
         d //= 2
         s += 1
 
