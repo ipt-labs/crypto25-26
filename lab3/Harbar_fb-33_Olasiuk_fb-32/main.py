@@ -159,7 +159,7 @@ if not found:
     print("\nНе вдалося знайти ключ")
 else:
     a, b, decrypted_text, mapping = found[0]  
-    print(f"\n✓ Знайдено правильний ключ:")
+    print(f"Знайдено правильний ключ:")
     print(f"Ключ: a={a}, b={b}")
     print(f"Відображення: {mapping[0]},{mapping[1]} -> {mapping[2]},{mapping[3]}")
     print(f"\nПочаток розшифрованого тексту:\n{decrypted_text[:500]}")  
