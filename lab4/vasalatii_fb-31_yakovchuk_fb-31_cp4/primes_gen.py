@@ -118,21 +118,33 @@ def miller_rabin_test(p: int, k:int) -> bool:
 
 def generate_strong_prime(*, bits: int=None, start: int=None, end: int=None, primality_test : Callable[[int,int],bool]=miller_rabin_test) -> int:
     if bits is not None:
+        if bits < 256:
+            raise ValueError("Bits must be more or equal than 256")
         if start is not None or end is not None:
             print(f"Start and end would be ignored as certain number of bits was mentioned")
         start = 2 ** (bits - 1)
-        end = 2 ** (bits + 50)
-    elif start is None or end is None:
+        end = 2 ** bits - 1
+    if (start is None or end is None) and bits is None:
         raise ValueError("Start and end must be provided if number of bits was not mentioned")
+    if start is not None and end is not None and bits is None:
+        if start > end:
+            raise ValueError("Start must be less than end")
+        if start < 2 ** 255:
+            raise ValueError("Start must be more or equal than 2 ** 255")
 
     while True:
-        candidate = random.randrange(start, end)
-        if trial_division(candidate, primes_for_trial_division) and primality_test(candidate,k):
-            i = 0
-            while True:
-                i += 1
-                p = 2 * i * candidate + 1
-                if p.bit_length() > end.bit_length():
-                    break
-                if trial_division(p, primes_for_trial_division) and primality_test(p,k):
-                    return p
+        x = random.randint(start//2, end//2)
+        if x & 1 == 0:
+            x += 1
+        for i in range((end - x)//2):
+            p_1 = x + i*2
+            if trial_division(p_1, primes_for_trial_division) and primality_test(p_1,k):
+                i = 0
+                while True:
+                    i += 1
+                    p = 2 * i * p_1 + 1
+                    if p.bit_length() > end.bit_length():
+                        break
+                    if trial_division(p, primes_for_trial_division) and primality_test(p,k):
+                        return p
+                    
