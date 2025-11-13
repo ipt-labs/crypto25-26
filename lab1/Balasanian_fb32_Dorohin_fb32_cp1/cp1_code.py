@@ -17,10 +17,10 @@ def monogram_frequencies(text: str, include_spaces: bool=True):
     freqs = {c: counts[c]/total for c in counts}
     return counts, freqs, total
 
-def bigram_frequencies(text: str, include_spaces: bool=True):
+def bigram_frequencies_step(text: str, step: int = 1, include_spaces: bool=True):
     if not include_spaces:
         text = text.replace(" ", "")
-    bigrams = [text[i:i+2] for i in range(len(text)-1)]
+    bigrams = [text[i:i+2] for i in range(0, len(text)-1, step)]
     counts = Counter(bigrams)
     total = sum(counts.values())
     freqs = {bg: counts[bg]/total for bg in counts}
@@ -42,41 +42,62 @@ if __name__ == "__main__":
 
     text = prepare_text(text)
 
-    #монограми
+    # монограми
     mg_counts, mg_freqs, total_mg = monogram_frequencies(text, include_spaces=True)
     H1 = entropy(mg_freqs, 1)
     R1 = redundancy(H1, len(alphabet)+1)  # +1 бо є пробіл
 
-    #біграми
-    bg_counts, bg_freqs, total_bg = bigram_frequencies(text, include_spaces=True)
-    H2 = entropy(bg_freqs, 2)
-    R2 = redundancy(H2, len(alphabet)+1)
-
-    #те саме без пробілів
     mg_counts_ns, mg_freqs_ns, _ = monogram_frequencies(text, include_spaces=False)
     H1_ns = entropy(mg_freqs_ns, 1)
     R1_ns = redundancy(H1_ns, len(alphabet))
 
-    bg_counts_ns, bg_freqs_ns, _ = bigram_frequencies(text, include_spaces=False)
-    H2_ns = entropy(bg_freqs_ns, 2)
-    R2_ns = redundancy(H2_ns, len(alphabet))
+    # біграми з різними кроками
+    # step=1 → перетин
+    # step=2 → без перетину
 
-    #вивід
+    # з пробілами
+    bg_counts_overlap, bg_freqs_overlap, _ = bigram_frequencies_step(text, step=1, include_spaces=True)
+    H2_overlap = entropy(bg_freqs_overlap, 2)
+    R2_overlap = redundancy(H2_overlap, len(alphabet)+1)
+
+    bg_counts_no_overlap, bg_freqs_no_overlap, _ = bigram_frequencies_step(text, step=2, include_spaces=True)
+    H2_no_overlap = entropy(bg_freqs_no_overlap, 2)
+    R2_no_overlap = redundancy(H2_no_overlap, len(alphabet)+1)
+
+    # без пробілів
+    bg_counts_overlap_ns, bg_freqs_overlap_ns, _ = bigram_frequencies_step(text, step=1, include_spaces=False)
+    H2_overlap_ns = entropy(bg_freqs_overlap_ns, 2)
+    R2_overlap_ns = redundancy(H2_overlap_ns, len(alphabet))
+
+    bg_counts_no_overlap_ns, bg_freqs_no_overlap_ns, _ = bigram_frequencies_step(text, step=2, include_spaces=False)
+    H2_no_overlap_ns = entropy(bg_freqs_no_overlap_ns, 2)
+    R2_no_overlap_ns = redundancy(H2_no_overlap_ns, len(alphabet))
+
+    # Вивід
     print("Монограми з пробілами:")
     print(f"H1 = {H1:.4f}, Надлишковість = {R1:.4f}")
     print("Монограми без пробілів:")
     print(f"H1 = {H1_ns:.4f}, Надлишковість = {R1_ns:.4f}")
-    print("Біграми з пробілами:")
-    print(f"H2 = {H2:.4f}, Надлишковість = {R2:.4f}")
-    print("Біграми без пробілів:")
-    print(f"H2 = {H2_ns:.4f}, Надлишковість = {R2_ns:.4f}")
 
-    #збереження у Excel
+    print("\nБіграми з пересуванням (перетин) з пробілами:")
+    print(f"H2 = {H2_overlap:.4f}, Надлишковість = {R2_overlap:.4f}")
+    print("Біграми без пересування (кожні дві літери) з пробілами:")
+    print(f"H2 = {H2_no_overlap:.4f}, Надлишковість = {R2_no_overlap:.4f}")
+    print("Біграми з пересуванням (перетин) без пробілів:")
+    print(f"H2 = {H2_overlap_ns:.4f}, Надлишковість = {R2_overlap_ns:.4f}")
+    print("Біграми без пересування (кожні дві літери) без пробілів:")
+    print(f"H2 = {H2_no_overlap_ns:.4f}, Надлишковість = {R2_no_overlap_ns:.4f}")
+
+    # Збереження у Excel
     with pd.ExcelWriter("stats.xlsx") as writer:
         pd.DataFrame(mg_counts.items(), columns=["Letter", "Count"]).to_excel(writer, "Monograms", index=False)
-        pd.DataFrame(bg_counts.items(), columns=["Bigram", "Count"]).to_excel(writer, "Bigrams", index=False)
         pd.DataFrame(mg_counts_ns.items(), columns=["Letter", "Count"]).to_excel(writer, "Monograms_no_space", index=False)
-        pd.DataFrame(bg_counts_ns.items(), columns=["Bigram", "Count"]).to_excel(writer, "Bigrams_no_space", index=False)
+
+        pd.DataFrame(bg_counts_overlap.items(), columns=["Bigram", "Count"]).to_excel(writer, "Bigrams_overlap", index=False)
+        pd.DataFrame(bg_counts_no_overlap.items(), columns=["Bigram", "Count"]).to_excel(writer, "Bigrams_no_overlap", index=False)
+
+        pd.DataFrame(bg_counts_overlap_ns.items(), columns=["Bigram", "Count"]).to_excel(writer, "Bigrams_overlap_no_space", index=False)
+        pd.DataFrame(bg_counts_no_overlap_ns.items(), columns=["Bigram", "Count"]).to_excel(writer, "Bigrams_no_overlap_no_space", index=False)
 
 # Розмір алфавіту (якщо брали російські букви + пробіл)
 m = 34
@@ -96,3 +117,5 @@ for n, (h_min, h_max) in data.items():
     Hn = (h_min + h_max) / 2  # середнє значення
     Rn = 1 - Hn / H0
     print(f"{n}\t{Hn:.4f}\t\t{Rn:.4f}")
+
+
