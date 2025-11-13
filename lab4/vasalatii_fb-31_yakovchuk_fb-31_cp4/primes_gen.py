@@ -85,7 +85,7 @@ def trial_division(n: int, small_primes:list[int]) -> bool:
     return True
 
 def miller_rabin_test(p: int, k:int) -> bool:
-    if not trial_division(p, primes_for_trial_division):
+    if p < 2:
         return False
 
     d = p - 1
@@ -127,12 +127,12 @@ def generate_strong_prime(*, bits: int=None, start: int=None, end: int=None, pri
 
     while True:
         candidate = random.randrange(start, end)
-        if primality_test(candidate,k):
+        if trial_division(candidate, primes_for_trial_division) and primality_test(candidate,k):
             i = 0
             while True:
                 i += 1
                 p = 2 * i * candidate + 1
                 if p.bit_length() > end.bit_length():
                     break
-                if primality_test(p,k):
+                if trial_division(p, primes_for_trial_division) and primality_test(p,k):
                     return p
