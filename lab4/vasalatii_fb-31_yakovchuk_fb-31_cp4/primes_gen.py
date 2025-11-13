@@ -110,6 +110,8 @@ def miller_rabin_test(p: int, k:int) -> bool:
             a = mod_pow_horner(a, 2, p)
             if a == p - 1:
                 break
+            elif a == 1:
+                return False
         else:
             return False
 
