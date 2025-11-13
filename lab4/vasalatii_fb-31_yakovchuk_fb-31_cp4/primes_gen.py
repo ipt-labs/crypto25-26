@@ -3,6 +3,8 @@ from typing import Callable
 
 from modular_arithemtic import mod_pow_horner, gcd
 
+k = 8
+
 def sieve_of_eratosthenes(limit:int) -> list[int]:
     if limit < 2:
         return []
@@ -125,12 +127,12 @@ def generate_strong_prime(*, bits: int=None, start: int=None, end: int=None, pri
 
     while True:
         candidate = random.randrange(start, end)
-        if primality_test(candidate,7):
+        if primality_test(candidate,k):
             i = 0
             while True:
                 i += 1
                 p = 2 * i * candidate + 1
                 if p.bit_length() > end.bit_length():
                     break
-                if primality_test(p,7):
+                if primality_test(p,k):
                     return p
