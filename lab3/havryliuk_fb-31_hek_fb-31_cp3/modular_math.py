@@ -28,7 +28,7 @@ def znayty_obernenyy_element(element, modul):
     return obernenyy
 
 
-def vyrishyty_liniyне_porivnyannya(koefitsiyent, konstanta, modul):
+def vyrishyty_liniyne_porivnyannya(koefitsiyent, konstanta, modul):
     znachennya_nsd = rozshyrenyy_evklid(koefitsiyent, modul)[0]
     
     if konstanta % znachennya_nsd != 0:

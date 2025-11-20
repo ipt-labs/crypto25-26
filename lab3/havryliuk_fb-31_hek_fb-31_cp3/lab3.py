@@ -2,7 +2,7 @@ import os
 import sys
 import time
 from collections import defaultdict
-from modular_math import vyrishyty_liniyне_porivnyannya, znayty_obernenyy_element
+from modular_math import vyrishyty_liniyne_porivnyannya, znayty_obernenyy_element
 from text_analyzer import (
     ROZMIR_ALFAVITU, bihrama_do_chysla, chyslo_do_bihramy, 
     ochystyty_shyfrotekst, otrymaty_top_bihramy, otsinyty_yakist_tekstu,
@@ -57,7 +57,7 @@ def znayty_kandydaty_klyucha(bihrama_vid1, bihrama_vid2, bihrama_shyf1, bihrama_
     if riznytsya_X == 0:
         return []
     
-    mozhlyvi_znachennya_a = vyrishyty_liniyне_porivnyannya(riznytsya_X, riznytsya_Y, MODUL_V_KVADRATI)
+    mozhlyvi_znachennya_a = vyrishyty_liniyne_porivnyannya(riznytsya_X, riznytsya_Y, MODUL_V_KVADRATI)
     
     kandydaty_klyuchiv = []
     
