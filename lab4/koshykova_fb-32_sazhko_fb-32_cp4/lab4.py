@@ -103,13 +103,13 @@ def Verify(msg, signature, public_key):
     return pow(signature, e, n) == h
 
 #протокол обміну ключем
-def send_key(k, recipient_public, sender_private):
+def SendKey(k, recipient_public, sender_private):
     k1 = Encrypt(k, recipient_public)
     s = Sign(k, sender_private)
     s1 = Encrypt(s, recipient_public)
     return k1, s1
 
-def receive_key(k1, s1, recipient_private, sender_public, file):
+def ReceiveKey(k1, s1, recipient_private, sender_public, file):
     k = Decrypt(k1, recipient_private)
     s = Decrypt(s1, recipient_private)
     if Verify(k, s, sender_public):
@@ -153,8 +153,8 @@ def my_test():
 
         # Протокол обміну
         out.write("exhange protool (А -> В)\n")
-        k1, s1 = send_key(msg, pub_B, priv_A)
-        receive_key(k1, s1, priv_B, pub_A, out)
+        k1, s1 = SendKey(msg, pub_B, priv_A)
+        ReceiveKey(k1, s1, priv_B, pub_A, out)
 
 
 if __name__ == '__main__':
