@@ -1,13 +1,7 @@
 import random
 
-# =============================================================================
-# ЧАСТИНА 1: МАТЕМАТИЧНЕ ЯДРО (Тести та Генерація)
-# =============================================================================
-
 def trial_division(n):
-    """ Перевірка на ділення малими простими числами """
     if n < 2: return False
-    # Перші прості числа для швидкого відсіву
     primes_filter = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53]
     for p in primes_filter:
         if n == p: return True
@@ -15,15 +9,12 @@ def trial_division(n):
     return True
 
 def miller_rabin_test(n, k=40):
-    """ Реалізація тесту Міллера-Рабіна власноруч """
-    # Представляємо n-1 як d * 2^s
     d = n - 1
     s = 0
     while d % 2 == 0:
         d //= 2
         s += 1
     
-    # Раунди перевірки
     for _ in range(k):
         a = random.randrange(2, n - 1)
         x = pow(a, d, n)
@@ -36,23 +27,18 @@ def miller_rabin_test(n, k=40):
             if x == n - 1:
                 break
         else:
-            return False # Число точно складене
-    return True # Число ймовірно просте
+            return False
+    return True
 
 def get_random_prime(bits, debug_mode=False):
-    """ Пошук простого числа з виводом невдалих спроб """
     while True:
-        # Генеруємо непарне число потрібної довжини
         candidate = random.getrandbits(bits)
         candidate |= (1 << bits - 1) | 1
         
-        # Етап 1: Пробні ділення
         if trial_division(candidate):
-            # Етап 2: Міллер-Рабін
             if miller_rabin_test(candidate):
                 return candidate
             else:
-                # Якщо пройшло ділення, але провалило М-Р — виводимо це
                 if debug_mode:
                     print(f" [x] Число {candidate} відсіяно тестом Міллера-Рабіна (складене).")
 
@@ -69,11 +55,6 @@ def modinv(a, m):
         raise Exception('Помилка: Оберненого елемента не існує')
     return x % m
 
-# =============================================================================
-# ЧАСТИНА 2: СІМ ОБОВ'ЯЗКОВИХ ПРОЦЕДУР
-# =============================================================================
-
-# 1. Генерація пари ключів
 def GenerateKeyPair(bits=256, debug_mode=False):
     p = get_random_prime(bits, debug_mode)
     q = get_random_prime(bits, debug_mode)
@@ -84,79 +65,62 @@ def GenerateKeyPair(bits=256, debug_mode=False):
     phi = (p - 1) * (q - 1)
     
     e = 65537
-    # Гарантуємо взаємну простоту e та phi
     while extended_gcd(e, phi)[0] != 1:
         e = random.randrange(3, phi, 2)
         
     d = modinv(e, phi)
     
-    # Повертаємо ((private), (public))
     return ((d, p, q), (n, e))
 
-# 2. Шифрування
 def Encrypt(message_int, public_key):
     n, e = public_key
     if message_int >= n:
         raise ValueError("Повідомлення перевищує розмір модуля n!")
     return pow(message_int, e, n)
 
-# 3. Розшифрування
 def Decrypt(ciphertext, private_key):
     d, p, q = private_key
     n = p * q
     return pow(ciphertext, d, n)
 
-# 4. Підпис
 def Sign(message_int, private_key):
     d, p, q = private_key
     n = p * q
     return pow(message_int, d, n)
 
-# 5. Перевірка підпису
 def Verify(message_int, signature, public_key):
     n, e = public_key
     check_val = pow(signature, e, n)
     return check_val == message_int
 
-# 6. Відправка ключа (Протокол)
 def SendKey(k, sender_priv, receiver_pub):
-    # Шифруємо k (для B)
     k_encrypted = Encrypt(k, receiver_pub)
-    # Підписуємо k (від A)
     k_signature = Sign(k, sender_priv)
-    # Шифруємо підпис (для B)
     signature_encrypted = Encrypt(k_signature, receiver_pub)
     
     return k_encrypted, signature_encrypted
 
-# 7. Отримання ключа (Протокол)
 def ReceiveKey(package, receiver_priv, sender_pub):
     k_enc, s_enc = package
     
-    # Розшифровуємо дані
     k_decrypted = Decrypt(k_enc, receiver_priv)
     s_decrypted = Decrypt(s_enc, receiver_priv)
     
-    # Перевіряємо підпис
     if Verify(k_decrypted, s_decrypted, sender_pub):
         return k_decrypted
     else:
         return None
 
-# =============================================================================
-# ЧАСТИНА 3: ГОЛОВНИЙ СЦЕНАРІЙ ВИКОНАННЯ
-# =============================================================================
-
 def text_to_int(text):
     return int.from_bytes(text.encode('utf-8'), 'big')
 
 if __name__ == "__main__":
-    # --- Етап 1: Генерація ---
+    print("\n>>> ЗАПУСК ЛАБОРАТОРНОЇ РОБОТИ №5: RSA <<<\n")
+
     print("1. Формування ключів (256 біт)")
     print("-----------------------------------")
     print(" -> Генеруємо пару для Абонента A...")
     
-    # Вмикаємо вивід невдалих кандидатів
     priv_A, pub_A = GenerateKeyPair(256, debug_mode=True)
     
     print(f" [+] Знайдено прості числа для A:")
@@ -169,14 +133,12 @@ if __name__ == "__main__":
         
         print(f"    Поточні p, q для B:\n    p = {priv_B[1]}\n    q = {priv_B[2]}")
 
-        # Перевірка критичної умови для протоколу
         if pub_B[0] >= pub_A[0]:
             print(" [OK] Умова модулів виконана (n_B >= n_A).")
             break
         else:
             print("\n [!] Увага: Модуль B менший за A. Повторна генерація для коректності протоколу...\n")
 
-    # --- Вивід параметрів ---
     print("\n2. Згенеровані параметри криптосистеми")
     print("-----------------------------------")
     print("Користувач A:")
@@ -191,11 +153,10 @@ if __name__ == "__main__":
     print(f"  private exp (d) = {priv_B[0]}")
     print(f"  primes (p, q) = {priv_B[1]}, {priv_B[2]}")
 
-    # --- Тест шифрування ---
     print("\n3. Демонстрація конфіденційності (Encrypt/Decrypt)")
     print("-----------------------------------")
     
-    test_msg_num = random.randint(10**30, 10**31) # Велике випадкове число
+    test_msg_num = random.randint(10**30, 10**31)
     print(f" Оригінальне повідомлення (число): {test_msg_num}")
     
     encrypted_c = Encrypt(test_msg_num, pub_B)
@@ -209,7 +170,6 @@ if __name__ == "__main__":
     else:
         print(" >> Результат: Помилка!")
 
-    # --- Тест підпису ---
     print("\n4. Демонстрація автентичності (Digital Signature)")
     print("-----------------------------------")
     
@@ -223,7 +183,6 @@ if __name__ == "__main__":
     verification_status = Verify(sign_int, signature_val, pub_A)
     print(f" Перевірка підпису публічним ключем A: {verification_status}")
 
-    # --- Тест протоколу ---
     print("\n5. Протокол безпечного обміну ключами")
     print("-----------------------------------")
     
