@@ -115,7 +115,6 @@ def text_to_int(text):
     return int.from_bytes(text.encode('utf-8'), 'big')
 
 if __name__ == "__main__":
-    print("\n>>> ЗАПУСК ЛАБОРАТОРНОЇ РОБОТИ №5: RSA <<<\n")
 
     print("1. Формування ключів (256 біт)")
     print("-----------------------------------")
