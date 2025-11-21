@@ -47,14 +47,14 @@ def Decrypt(ciphertext, private_key):
 def Sign(message, private_key):
     d, p, q = private_key
     n = p * q
-    hashed_message_int = hash_function(message)
+    hashed_message_int = int.from_bytes(message.encode('utf-8'), 'big')
     signature = modular_exponentiation(hashed_message_int, d, n)
     return signature
 
 def Verify(message, signature, public_key):
     n, e = public_key
     decrypted_signature_int = modular_exponentiation(signature, e, n)
-    hashed_message_int = hash_function(message)
+    hashed_message_int = int.from_bytes(message.encode('utf-8'), 'big') 
     return decrypted_signature_int == hashed_message_int
 
 def SendKey(k, my_private_key, recipient_public_key):
