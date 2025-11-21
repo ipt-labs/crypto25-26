@@ -103,13 +103,13 @@ def Verify(msg, signature, public_key):
     return pow(signature, e, n) == h
 
 #протокол обміну ключем
-def SendKey(k, recipient_public, sender_private):
+def send_key(k, recipient_public, sender_private):
     k1 = Encrypt(k, recipient_public)
     s = Sign(k, sender_private)
     s1 = Encrypt(s, recipient_public)
     return k1, s1
 
-def ReceiveKey(k1, s1, recipient_private, sender_public, file):
+def receive_key(k1, s1, recipient_private, sender_public, file):
     k = Decrypt(k1, recipient_private)
     s = Decrypt(s1, recipient_private)
     if Verify(k, s, sender_public):
@@ -153,9 +153,56 @@ def my_test():
 
         # Протокол обміну
         out.write("exhange protool (А -> В)\n")
-        k1, s1 = SendKey(msg, pub_B, priv_A)
-        ReceiveKey(k1, s1, priv_B, pub_A, out)
+        k1, s1 = send_key(msg, pub_B, priv_A)
+        receive_key(k1, s1, priv_B, pub_A, out)
 
+#тест для сайту
+def Sign_raw(msg_int, private_key):
+    d, p, q = private_key
+    n = p * q
+    return pow(msg_int, d, n)
+
+def Verify_raw(msg_int, signature, public_key):
+    e, n = public_key
+    return pow(signature, e, n) == msg_int
+
+def server_test():
+    print("\nRSA SERVER TEST\n")
+
+    modulus_hex = input("Введіть modulus сервера (hex): ").strip()
+    exp_hex     = input("Введіть exponent сервера (hex): ").strip()
+    server_open = [int(exp_hex, 16), int(modulus_hex, 16)]
+    msg_text = input("Введіть повідомлення: ").strip()
+    msg_int = int(msg_text.encode('utf-8').hex().upper(), 16)
+
+    print("\nПеревірка шифрування своїм ключем")
+
+    p, q, _, _ = gen_numbers_pair()
+    pub_my, priv_my = GenerateKeyPair(p, q)
+
+    print("modulus (n):", hex(pub_my[1])[2:].upper())
+    print("exponent(e):", hex(pub_my[0])[2:].upper())
+
+    encrypted_ours = Encrypt(msg_int, pub_my)
+    print("Наше шифрування:", hex(encrypted_ours)[2:].upper())
+
+    print("\nШифрування з відкритим ключем сервера")
+    encrypted_server = Encrypt(msg_int, server_open)
+    print("Encrypted (server) =", hex(encrypted_server)[2:].upper())
+
+    signature_hex = input("\nВведіть підпис, виданий сайтом: ").strip()
+    signature_int = int(signature_hex, 16)
+
+    print("\nПеревірка підпису, зробленого сервером")
+    ok = Verify_raw(msg_int, signature_int, server_open)
+    print("Перевірка підпису сервера:", ok)
+
+    print("\nНаш підпис")
+    my_sig = Sign_raw(msg_int, priv_my)
+    print("My sign =", hex(my_sig)[2:].upper())
+
+    print("\nEND SERVER TEST\n")
 
 if __name__ == '__main__':
     my_test()
+    server_test()
