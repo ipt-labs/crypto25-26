@@ -1,0 +1,576 @@
+top 5 shifr: ээ, вд, чф, цг, гн
+A=128, B=830 → a_solutions=[502]
+fail (a=502, b=230)
+A=128, B=163 → a_solutions=[219]
+fail (a=219, b=705)
+A=128, B=211 → a_solutions=[820]
+fail (a=820, b=861)
+A=128, B=790 → a_solutions=[802]
+fail (a=802, b=100)
+A=128, B=131 → a_solutions=[459]
+fail (a=459, b=732)
+A=128, B=294 → a_solutions=[678]
+fail (a=678, b=541)
+A=128, B=342 → a_solutions=[318]
+fail (a=318, b=697)
+A=128, B=921 → a_solutions=[300]
+fail (a=300, b=897)
+A=128, B=798 → a_solutions=[742]
+fail (a=742, b=924)
+A=128, B=667 → a_solutions=[283]
+fail (a=283, b=258)
+A=128, B=48 → a_solutions=[601]
+fail (a=601, b=889)
+A=128, B=627 → a_solutions=[583]
+fail (a=583, b=128)
+A=128, B=750 → a_solutions=[141]
+fail (a=141, b=720)
+A=128, B=619 → a_solutions=[643]
+fail (a=643, b=54)
+A=128, B=913 → a_solutions=[360]
+fail (a=360, b=529)
+A=128, B=579 → a_solutions=[943]
+fail (a=943, b=885)
+A=128, B=171 → a_solutions=[159]
+fail (a=159, b=902)
+A=128, B=40 → a_solutions=[661]
+fail (a=661, b=236)
+A=128, B=334 → a_solutions=[378]
+fail (a=378, b=711)
+A=128, B=382 → a_solutions=[18]
+fail (a=18, b=867)
+A=934, B=830 → a_solutions=[254]
+fail (a=254, b=850)
+A=934, B=163 → a_solutions=[777]
+fail (a=777, b=271)
+A=934, B=211 → a_solutions=[882]
+fail (a=882, b=706)
+A=934, B=790 → a_solutions=[647]
+fail (a=647, b=7)
+A=934, B=131 → a_solutions=[707]
+fail (a=707, b=112)
+A=934, B=294 → a_solutions=[523]
+fail (a=523, b=448)
+A=934, B=342 → a_solutions=[628]
+fail (a=628, b=883)
+A=934, B=921 → a_solutions=[393]
+fail (a=393, b=184)
+A=934, B=798 → a_solutions=[184]
+fail (a=184, b=397)
+A=934, B=667 → a_solutions=[438]
+fail (a=438, b=351)
+A=934, B=48 → a_solutions=[105]
+fail (a=105, b=207)
+A=934, B=627 → a_solutions=[831]
+fail (a=831, b=469)
+A=934, B=750 → a_solutions=[79]
+fail (a=79, b=875)
+A=934, B=619 → a_solutions=[333]
+fail (a=333, b=829)
+A=934, B=913 → a_solutions=[856]
+fail (a=856, b=250)
+A=934, B=579 → a_solutions=[726]
+fail (a=726, b=947)
+A=934, B=171 → a_solutions=[314]
+pass (a=314, b=34)
+A=934, B=40 → a_solutions=[568]
+fail (a=568, b=949)
+A=934, B=334 → a_solutions=[130]
+fail (a=130, b=370)
+A=934, B=382 → a_solutions=[235]
+fail (a=235, b=805)
+A=142, B=830 → a_solutions=[642]
+fail (a=642, b=810)
+A=142, B=163 → a_solutions=[617]
+fail (a=617, b=20)
+A=142, B=211 → a_solutions=[103]
+fail (a=103, b=499)
+A=142, B=790 → a_solutions=[750]
+fail (a=750, b=571)
+A=142, B=131 → a_solutions=[319]
+fail (a=319, b=152)
+A=142, B=294 → a_solutions=[936]
+fail (a=936, b=237)
+A=142, B=342 → a_solutions=[422]
+fail (a=422, b=716)
+A=142, B=921 → a_solutions=[108]
+fail (a=108, b=788)
+A=142, B=798 → a_solutions=[344]
+fail (a=344, b=648)
+A=142, B=667 → a_solutions=[25]
+fail (a=25, b=562)
+A=142, B=48 → a_solutions=[447]
+fail (a=447, b=251)
+A=142, B=627 → a_solutions=[133]
+fail (a=133, b=323)
+A=142, B=750 → a_solutions=[858]
+fail (a=858, b=121)
+A=142, B=619 → a_solutions=[539]
+fail (a=539, b=35)
+A=142, B=913 → a_solutions=[514]
+fail (a=514, b=206)
+A=142, B=579 → a_solutions=[647]
+fail (a=647, b=757)
+A=142, B=171 → a_solutions=[211]
+fail (a=211, b=431)
+A=142, B=40 → a_solutions=[853]
+fail (a=853, b=345)
+A=142, B=334 → a_solutions=[828]
+fail (a=828, b=516)
+A=142, B=382 → a_solutions=[314]
+A=377, B=830 → a_solutions=[693]
+fail (a=693, b=884)
+A=377, B=163 → a_solutions=[913]
+fail (a=913, b=148)
+A=377, B=211 → a_solutions=[439]
+fail (a=439, b=930)
+A=377, B=790 → a_solutions=[127]
+fail (a=127, b=873)
+A=377, B=131 → a_solutions=[268]
+fail (a=268, b=78)
+A=377, B=294 → a_solutions=[220]
+fail (a=220, b=291)
+A=377, B=342 → a_solutions=[707]
+A=377, B=921 → a_solutions=[395]
+fail (a=395, b=55)
+A=377, B=798 → a_solutions=[48]
+fail (a=48, b=520)
+A=377, B=667 → a_solutions=[741]
+fail (a=741, b=508)
+A=377, B=48 → a_solutions=[487]
+fail (a=487, b=554)
+A=377, B=627 → a_solutions=[175]
+fail (a=175, b=497)
+A=377, B=750 → a_solutions=[522]
+fail (a=522, b=651)
+A=377, B=619 → a_solutions=[254]
+fail (a=254, b=639)
+A=377, B=913 → a_solutions=[474]
+fail (a=474, b=864)
+A=377, B=579 → a_solutions=[649]
+fail (a=649, b=628)
+A=377, B=171 → a_solutions=[834]
+fail (a=834, b=129)
+A=377, B=40 → a_solutions=[566]
+fail (a=566, b=117)
+A=377, B=334 → a_solutions=[786]
+fail (a=786, b=342)
+A=377, B=382 → a_solutions=[312]
+fail (a=312, b=163)
+A=833, B=830 → a_solutions=[459]
+A=833, B=163 → a_solutions=[742]
+A=833, B=211 → a_solutions=[141]
+A=833, B=790 → a_solutions=[159]
+A=833, B=131 → a_solutions=[502]
+A=833, B=294 → a_solutions=[283]
+A=833, B=342 → a_solutions=[643]
+A=833, B=921 → a_solutions=[661]
+A=833, B=798 → a_solutions=[219]
+A=833, B=667 → a_solutions=[678]
+A=833, B=48 → a_solutions=[360]
+A=833, B=627 → a_solutions=[378]
+A=833, B=750 → a_solutions=[820]
+A=833, B=619 → a_solutions=[318]
+A=833, B=913 → a_solutions=[601]
+A=833, B=579 → a_solutions=[18]
+A=833, B=171 → a_solutions=[802]
+A=833, B=40 → a_solutions=[300]
+A=833, B=334 → a_solutions=[583]
+A=833, B=382 → a_solutions=[943]
+A=806, B=830 → a_solutions=[]
+A=806, B=163 → a_solutions=[]
+A=806, B=211 → a_solutions=[]
+A=806, B=790 → a_solutions=[]
+A=806, B=131 → a_solutions=[]
+A=806, B=294 → a_solutions=[]
+A=806, B=342 → a_solutions=[]
+A=806, B=921 → a_solutions=[]
+A=806, B=798 → a_solutions=[]
+A=806, B=667 → a_solutions=[]
+A=806, B=48 → a_solutions=[]
+A=806, B=627 → a_solutions=[]
+A=806, B=750 → a_solutions=[]
+A=806, B=619 → a_solutions=[]
+A=806, B=913 → a_solutions=[]
+A=806, B=579 → a_solutions=[]
+A=806, B=171 → a_solutions=[]
+A=806, B=40 → a_solutions=[]
+A=806, B=334 → a_solutions=[]
+A=806, B=382 → a_solutions=[]
+A=14, B=830 → a_solutions=[883]
+fail (a=883, b=748)
+A=14, B=163 → a_solutions=[904]
+fail (a=904, b=640)
+A=14, B=211 → a_solutions=[221]
+fail (a=221, b=34)
+A=14, B=790 → a_solutions=[331]
+fail (a=331, b=292)
+A=14, B=131 → a_solutions=[78]
+fail (a=78, b=214)
+A=14, B=294 → a_solutions=[21]
+fail (a=21, b=919)
+A=14, B=342 → a_solutions=[299]
+fail (a=299, b=313)
+A=14, B=921 → a_solutions=[409]
+fail (a=409, b=571)
+A=14, B=798 → a_solutions=[57]
+fail (a=57, b=28)
+A=14, B=667 → a_solutions=[940]
+fail (a=940, b=841)
+A=14, B=48 → a_solutions=[278]
+fail (a=278, b=127)
+A=14, B=627 → a_solutions=[388]
+fail (a=388, b=385)
+A=14, B=750 → a_solutions=[740]
+fail (a=740, b=586)
+A=14, B=619 → a_solutions=[662]
+fail (a=662, b=438)
+A=14, B=913 → a_solutions=[683]
+fail (a=683, b=330)
+A=14, B=579 → a_solutions=[110]
+fail (a=110, b=943)
+A=14, B=171 → a_solutions=[630]
+fail (a=630, b=710)
+A=14, B=40 → a_solutions=[552]
+fail (a=552, b=562)
+A=14, B=334 → a_solutions=[573]
+fail (a=573, b=454)
+A=14, B=382 → a_solutions=[851]
+fail (a=851, b=809)
+A=249, B=830 → a_solutions=[644]
+fail (a=644, b=467)
+A=249, B=163 → a_solutions=[101]
+fail (a=101, b=102)
+A=249, B=211 → a_solutions=[738]
+fail (a=738, b=670)
+A=249, B=790 → a_solutions=[914]
+fail (a=914, b=314)
+A=249, B=131 → a_solutions=[317]
+fail (a=317, b=495)
+A=249, B=294 → a_solutions=[418]
+fail (a=418, b=662)
+A=249, B=342 → a_solutions=[94]
+fail (a=94, b=269)
+A=249, B=921 → a_solutions=[270]
+fail (a=270, b=874)
+A=249, B=798 → a_solutions=[860]
+fail (a=860, b=566)
+A=249, B=667 → a_solutions=[543]
+fail (a=543, b=137)
+A=249, B=48 → a_solutions=[637]
+fail (a=637, b=340)
+A=249, B=627 → a_solutions=[813]
+fail (a=813, b=945)
+A=249, B=750 → a_solutions=[223]
+fail (a=223, b=911)
+A=249, B=619 → a_solutions=[867]
+fail (a=867, b=482)
+A=249, B=913 → a_solutions=[324]
+fail (a=324, b=117)
+A=249, B=579 → a_solutions=[176]
+fail (a=176, b=329)
+A=249, B=171 → a_solutions=[47]
+fail (a=47, b=688)
+A=249, B=40 → a_solutions=[691]
+fail (a=691, b=259)
+A=249, B=334 → a_solutions=[148]
+fail (a=148, b=855)
+A=249, B=382 → a_solutions=[785]
+fail (a=785, b=462)
+A=27, B=830 → a_solutions=[707]
+A=27, B=163 → a_solutions=[184]
+A=27, B=211 → a_solutions=[79]
+A=27, B=790 → a_solutions=[314]
+A=27, B=131 → a_solutions=[254]
+A=27, B=294 → a_solutions=[438]
+A=27, B=342 → a_solutions=[333]
+A=27, B=921 → a_solutions=[568]
+A=27, B=798 → a_solutions=[777]
+A=27, B=667 → a_solutions=[523]
+A=27, B=48 → a_solutions=[856]
+A=27, B=627 → a_solutions=[130]
+A=27, B=750 → a_solutions=[882]
+A=27, B=619 → a_solutions=[628]
+A=27, B=913 → a_solutions=[105]
+A=27, B=579 → a_solutions=[235]
+A=27, B=171 → a_solutions=[647]
+A=27, B=40 → a_solutions=[393]
+A=27, B=334 → a_solutions=[831]
+A=27, B=382 → a_solutions=[726]
+A=155, B=830 → a_solutions=[]
+A=155, B=163 → a_solutions=[]
+A=155, B=211 → a_solutions=[]
+A=155, B=790 → a_solutions=[]
+A=155, B=131 → a_solutions=[]
+A=155, B=294 → a_solutions=[]
+A=155, B=342 → a_solutions=[]
+A=155, B=921 → a_solutions=[]
+A=155, B=798 → a_solutions=[]
+A=155, B=667 → a_solutions=[]
+A=155, B=48 → a_solutions=[]
+A=155, B=627 → a_solutions=[]
+A=155, B=750 → a_solutions=[]
+A=155, B=619 → a_solutions=[]
+A=155, B=913 → a_solutions=[]
+A=155, B=579 → a_solutions=[]
+A=155, B=171 → a_solutions=[]
+A=155, B=40 → a_solutions=[]
+A=155, B=334 → a_solutions=[]
+A=155, B=382 → a_solutions=[]
+A=169, B=830 → a_solutions=[511]
+fail (a=511, b=748)
+A=169, B=163 → a_solutions=[780]
+fail (a=780, b=640)
+A=169, B=211 → a_solutions=[314]
+A=169, B=790 → a_solutions=[579]
+fail (a=579, b=292)
+A=169, B=131 → a_solutions=[450]
+fail (a=450, b=214)
+A=169, B=294 → a_solutions=[269]
+fail (a=269, b=919)
+A=169, B=342 → a_solutions=[764]
+fail (a=764, b=313)
+A=169, B=921 → a_solutions=[68]
+fail (a=68, b=571)
+A=169, B=798 → a_solutions=[181]
+fail (a=181, b=28)
+A=169, B=667 → a_solutions=[692]
+fail (a=692, b=841)
+A=169, B=48 → a_solutions=[495]
+fail (a=495, b=127)
+A=169, B=627 → a_solutions=[760]
+fail (a=760, b=385)
+A=169, B=750 → a_solutions=[647]
+fail (a=647, b=586)
+A=169, B=619 → a_solutions=[197]
+fail (a=197, b=438)
+A=169, B=913 → a_solutions=[466]
+fail (a=466, b=330)
+A=169, B=579 → a_solutions=[265]
+fail (a=265, b=943)
+A=169, B=171 → a_solutions=[382]
+fail (a=382, b=710)
+A=169, B=40 → a_solutions=[893]
+fail (a=893, b=562)
+A=169, B=334 → a_solutions=[201]
+fail (a=201, b=454)
+A=169, B=382 → a_solutions=[696]
+fail (a=696, b=809)
+A=404, B=830 → a_solutions=[768]
+fail (a=768, b=777)
+A=404, B=163 → a_solutions=[783]
+fail (a=783, b=846)
+A=404, B=211 → a_solutions=[707]
+A=404, B=790 → a_solutions=[511]
+A=404, B=131 → a_solutions=[193]
+fail (a=193, b=185)
+A=404, B=294 → a_solutions=[15]
+fail (a=15, b=135)
+A=404, B=342 → a_solutions=[900]
+fail (a=900, b=362)
+A=404, B=921 → a_solutions=[704]
+fail (a=704, b=37)
+A=404, B=798 → a_solutions=[178]
+fail (a=178, b=783)
+A=404, B=667 → a_solutions=[946]
+fail (a=946, b=664)
+A=404, B=48 → a_solutions=[885]
+fail (a=885, b=960)
+A=404, B=627 → a_solutions=[689]
+fail (a=689, b=635)
+A=404, B=750 → a_solutions=[254]
+fail (a=254, b=508)
+A=404, B=619 → a_solutions=[61]
+fail (a=61, b=389)
+A=404, B=913 → a_solutions=[76]
+fail (a=76, b=458)
+A=404, B=579 → a_solutions=[765]
+fail (a=765, b=360)
+A=404, B=171 → a_solutions=[450]
+fail (a=450, b=254)
+A=404, B=40 → a_solutions=[257]
+fail (a=257, b=135)
+A=404, B=334 → a_solutions=[272]
+fail (a=272, b=204)
+A=404, B=382 → a_solutions=[196]
+fail (a=196, b=431)
+A=819, B=830 → a_solutions=[319]
+A=819, B=163 → a_solutions=[344]
+A=819, B=211 → a_solutions=[858]
+A=819, B=790 → a_solutions=[211]
+A=819, B=131 → a_solutions=[642]
+A=819, B=294 → a_solutions=[25]
+A=819, B=342 → a_solutions=[539]
+A=819, B=921 → a_solutions=[853]
+A=819, B=798 → a_solutions=[617]
+A=819, B=667 → a_solutions=[936]
+A=819, B=48 → a_solutions=[514]
+A=819, B=627 → a_solutions=[828]
+A=819, B=750 → a_solutions=[103]
+A=819, B=619 → a_solutions=[422]
+A=819, B=913 → a_solutions=[447]
+A=819, B=579 → a_solutions=[314]
+A=819, B=171 → a_solutions=[750]
+A=819, B=40 → a_solutions=[108]
+A=819, B=334 → a_solutions=[133]
+A=819, B=382 → a_solutions=[647]
+A=947, B=830 → a_solutions=[78]
+A=947, B=163 → a_solutions=[57]
+A=947, B=211 → a_solutions=[740]
+A=947, B=790 → a_solutions=[630]
+A=947, B=131 → a_solutions=[883]
+A=947, B=294 → a_solutions=[940]
+A=947, B=342 → a_solutions=[662]
+A=947, B=921 → a_solutions=[552]
+A=947, B=798 → a_solutions=[904]
+A=947, B=667 → a_solutions=[21]
+A=947, B=48 → a_solutions=[683]
+A=947, B=627 → a_solutions=[573]
+A=947, B=750 → a_solutions=[221]
+A=947, B=619 → a_solutions=[299]
+A=947, B=913 → a_solutions=[278]
+A=947, B=579 → a_solutions=[851]
+A=947, B=171 → a_solutions=[331]
+A=947, B=40 → a_solutions=[409]
+A=947, B=334 → a_solutions=[388]
+A=947, B=382 → a_solutions=[110]
+A=792, B=830 → a_solutions=[450]
+A=792, B=163 → a_solutions=[181]
+A=792, B=211 → a_solutions=[647]
+A=792, B=790 → a_solutions=[382]
+A=792, B=131 → a_solutions=[511]
+A=792, B=294 → a_solutions=[692]
+A=792, B=342 → a_solutions=[197]
+A=792, B=921 → a_solutions=[893]
+A=792, B=798 → a_solutions=[780]
+A=792, B=667 → a_solutions=[269]
+A=792, B=48 → a_solutions=[466]
+A=792, B=627 → a_solutions=[201]
+A=792, B=750 → a_solutions=[314]
+A=792, B=619 → a_solutions=[764]
+A=792, B=913 → a_solutions=[495]
+A=792, B=579 → a_solutions=[696]
+A=792, B=171 → a_solutions=[579]
+A=792, B=40 → a_solutions=[68]
+A=792, B=334 → a_solutions=[760]
+A=792, B=382 → a_solutions=[265]
+A=235, B=830 → a_solutions=[208]
+fail (a=208, b=679)
+A=235, B=163 → a_solutions=[152]
+fail (a=152, b=183)
+A=235, B=211 → a_solutions=[692]
+fail (a=692, b=710)
+A=235, B=790 → a_solutions=[719]
+fail (a=719, b=400)
+A=235, B=131 → a_solutions=[753]
+fail (a=753, b=283)
+A=235, B=294 → a_solutions=[905]
+fail (a=905, b=531)
+A=235, B=342 → a_solutions=[484]
+fail (a=484, b=97)
+A=235, B=921 → a_solutions=[511]
+A=235, B=798 → a_solutions=[809]
+fail (a=809, b=485)
+A=235, B=667 → a_solutions=[56]
+fail (a=56, b=268)
+A=235, B=48 → a_solutions=[540]
+fail (a=540, b=299)
+A=235, B=627 → a_solutions=[567]
+fail (a=567, b=950)
+A=235, B=750 → a_solutions=[269]
+fail (a=269, b=871)
+A=235, B=619 → a_solutions=[477]
+fail (a=477, b=654)
+A=235, B=913 → a_solutions=[421]
+fail (a=421, b=158)
+A=235, B=579 → a_solutions=[27]
+fail (a=27, b=375)
+A=235, B=171 → a_solutions=[242]
+fail (a=242, b=602)
+A=235, B=40 → a_solutions=[450]
+fail (a=450, b=385)
+A=235, B=334 → a_solutions=[394]
+fail (a=394, b=850)
+A=235, B=382 → a_solutions=[934]
+fail (a=934, b=416)
+A=584, B=830 → a_solutions=[268]
+A=584, B=163 → a_solutions=[48]
+A=584, B=211 → a_solutions=[522]
+A=584, B=790 → a_solutions=[834]
+A=584, B=131 → a_solutions=[693]
+A=584, B=294 → a_solutions=[741]
+A=584, B=342 → a_solutions=[254]
+A=584, B=921 → a_solutions=[566]
+A=584, B=798 → a_solutions=[913]
+A=584, B=667 → a_solutions=[220]
+A=584, B=48 → a_solutions=[474]
+A=584, B=627 → a_solutions=[786]
+A=584, B=750 → a_solutions=[439]
+A=584, B=619 → a_solutions=[707]
+A=584, B=913 → a_solutions=[487]
+A=584, B=579 → a_solutions=[312]
+A=584, B=171 → a_solutions=[127]
+A=584, B=40 → a_solutions=[395]
+A=584, B=334 → a_solutions=[175]
+A=584, B=382 → a_solutions=[649]
+A=712, B=830 → a_solutions=[317]
+A=712, B=163 → a_solutions=[860]
+A=712, B=211 → a_solutions=[223]
+A=712, B=790 → a_solutions=[47]
+A=712, B=131 → a_solutions=[644]
+A=712, B=294 → a_solutions=[543]
+A=712, B=342 → a_solutions=[867]
+A=712, B=921 → a_solutions=[691]
+A=712, B=798 → a_solutions=[101]
+A=712, B=667 → a_solutions=[418]
+A=712, B=48 → a_solutions=[324]
+A=712, B=627 → a_solutions=[148]
+A=712, B=750 → a_solutions=[738]
+A=712, B=619 → a_solutions=[94]
+A=712, B=913 → a_solutions=[637]
+A=712, B=579 → a_solutions=[785]
+A=712, B=171 → a_solutions=[914]
+A=712, B=40 → a_solutions=[270]
+A=712, B=334 → a_solutions=[813]
+A=712, B=382 → a_solutions=[176]
+A=557, B=830 → a_solutions=[193]
+A=557, B=163 → a_solutions=[178]
+A=557, B=211 → a_solutions=[254]
+A=557, B=790 → a_solutions=[450]
+A=557, B=131 → a_solutions=[768]
+A=557, B=294 → a_solutions=[946]
+A=557, B=342 → a_solutions=[61]
+A=557, B=921 → a_solutions=[257]
+A=557, B=798 → a_solutions=[783]
+A=557, B=667 → a_solutions=[15]
+A=557, B=48 → a_solutions=[76]
+A=557, B=627 → a_solutions=[272]
+A=557, B=750 → a_solutions=[707]
+A=557, B=619 → a_solutions=[900]
+A=557, B=913 → a_solutions=[885]
+A=557, B=579 → a_solutions=[196]
+A=557, B=171 → a_solutions=[511]
+A=557, B=40 → a_solutions=[704]
+A=557, B=334 → a_solutions=[689]
+A=557, B=382 → a_solutions=[765]
+A=726, B=830 → a_solutions=[753]
+A=726, B=163 → a_solutions=[809]
+A=726, B=211 → a_solutions=[269]
+A=726, B=790 → a_solutions=[242]
+A=726, B=131 → a_solutions=[208]
+A=726, B=294 → a_solutions=[56]
+A=726, B=342 → a_solutions=[477]
+A=726, B=921 → a_solutions=[450]
+A=726, B=798 → a_solutions=[152]
+A=726, B=667 → a_solutions=[905]
+A=726, B=48 → a_solutions=[421]
+A=726, B=627 → a_solutions=[394]
+A=726, B=750 → a_solutions=[692]
+A=726, B=619 → a_solutions=[484]
+A=726, B=913 → a_solutions=[540]
+A=726, B=579 → a_solutions=[934]
+A=726, B=171 → a_solutions=[719]
+A=726, B=40 → a_solutions=[511]
+A=726, B=334 → a_solutions=[567]
+A=726, B=382 → a_solutions=[27]
+total_pairs=400, candidates=174, passed=1
