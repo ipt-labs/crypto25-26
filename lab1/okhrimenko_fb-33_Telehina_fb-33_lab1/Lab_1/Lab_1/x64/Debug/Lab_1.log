@@ -1,0 +1,4 @@
+﻿  H1_H2.cpp
+D:\Crypto\crypto25-26\lab1\okhrimenko_fb-33_Telehina_fb-33_lab1\Lab_1\Lab_1\H1_H2.cpp(90,15): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\Crypto\crypto25-26\lab1\okhrimenko_fb-33_Telehina_fb-33_lab1\Lab_1\Lab_1\H1_H2.cpp(142,16): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  Lab_1.vcxproj -> D:\Crypto\crypto25-26\lab1\okhrimenko_fb-33_Telehina_fb-33_lab1\Lab_1\x64\Debug\H1_H2.exe
