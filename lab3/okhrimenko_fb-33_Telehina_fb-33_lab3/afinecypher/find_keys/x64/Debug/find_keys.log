@@ -1,0 +1,4 @@
+﻿  find_keys.cpp
+D:\Crypto\crypto25-26\lab3\okhrimenko_fb-33_Telehina_fb-33_lab3\afinecypher\find_keys\find_keys.cpp(44,12): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\Crypto\crypto25-26\lab3\okhrimenko_fb-33_Telehina_fb-33_lab3\afinecypher\find_keys\find_keys.cpp(45,12): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  find_keys.vcxproj -> D:\Crypto\crypto25-26\lab3\okhrimenko_fb-33_Telehina_fb-33_lab3\afinecypher\x64\Debug\find_keys.exe
