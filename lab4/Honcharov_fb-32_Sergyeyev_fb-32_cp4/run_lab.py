@@ -61,7 +61,7 @@ print(f"Відкритий текст: '{message_text}'")
 signature_A = Sign(message_text, (d_A, p_A, q_A))
 print(f"Підпис Абонента А: S_A = {signature_A}")
 
-is_valid = Verify(message_text, signature_A, (n_A, e_A))
+is_valid = Verify("aboba", signature_A, (n_A, e_A))
 print(f"Абонент B проверил підпис: {is_valid}")
 print("-----------------------------------------")
 
