@@ -156,7 +156,8 @@ def main():
             continue
             
         h1_entropy = calculate_h(calculate_frequencies(plaintext, n=1, overlapping=True))
-        h2_entropy = calculate_h(calculate_frequencies(plaintext, n=2, overlapping=True))
+        
+        h2_entropy = calculate_h(calculate_frequencies(plaintext, n=2, overlapping=True)) / 2
         
         if h1_entropy < H1_THRESHOLD or h2_entropy < H2_THRESHOLD:
             valid_candidates.append((h1_entropy, h2_entropy, (a, b), plaintext))
