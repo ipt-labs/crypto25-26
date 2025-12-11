@@ -58,10 +58,8 @@ def jacobi_symbol(a: int, n: int) -> int:
     
     return result if n == 1 else 0
 
-# ============================================================================
-# ТЕСТИ ПЕРЕВІРКИ НА ПРОСТОТУ
-# ============================================================================
 
+# ТЕСТИ ПЕРЕВІРКИ НА ПРОСТОТУ
 def trial_division(n: int, limit: int = 1000) -> bool:
     """Тест пробних ділень на малі прості числа"""
     if n < 2:
@@ -136,10 +134,7 @@ def is_prime(n: int, k: int = 10) -> bool:
         return False
     return miller_rabin_test(n, k)
 
-# ============================================================================
 # ГЕНЕРАЦІЯ ПРОСТИХ ЧИСЕЛ
-# ============================================================================
-
 def generate_prime(bits: int) -> int:
     """Генерує випадкове просте число заданої довжини в бітах"""
     while True:
@@ -160,9 +155,7 @@ def generate_prime_pair(bits: int) -> Tuple[int, int]:
     
     return p, q
 
-# ============================================================================
 # ГЕНЕРАЦІЯ КЛЮЧІВ RSA
-# ============================================================================
 
 def GenerateKeyPair(bits: int = 256) -> Tuple[Tuple[int, int], Tuple[int, int, int]]:
     """
@@ -193,10 +186,7 @@ def GenerateKeyPair(bits: int = 256) -> Tuple[Tuple[int, int], Tuple[int, int, i
     private_key = (d, p, q)
     
     return public_key, private_key
-
-# ============================================================================
 # ШИФРУВАННЯ ТА РОЗШИФРУВАННЯ
-# ============================================================================
 
 def Encrypt(message: int, public_key: Tuple[int, int]) -> int:
     """Шифрує повідомлення відкритим ключем"""
@@ -211,9 +201,8 @@ def Decrypt(ciphertext: int, private_key: Tuple[int, int, int]) -> int:
     n = p * q
     return power_mod(ciphertext, d, n)
 
-# ============================================================================
+
 # ЦИФРОВИЙ ПІДПИС
-# ============================================================================
 
 def Sign(message: int, private_key: Tuple[int, int, int]) -> int:
     """Створює цифровий підпис повідомлення"""
@@ -229,9 +218,8 @@ def Verify(message: int, signature: int, public_key: Tuple[int, int]) -> bool:
     verified_message = power_mod(signature, e, n)
     return verified_message == message
 
-# ============================================================================
+
 # ПРОТОКОЛ РОЗСИЛАННЯ КЛЮЧІВ
-# ============================================================================
 
 def SendKey(k: int, sender_private_key: Tuple[int, int, int], 
             receiver_public_key: Tuple[int, int]) -> Tuple[int, int]:
@@ -281,9 +269,9 @@ def ReceiveKey(k1: int, S1: int, receiver_private_key: Tuple[int, int, int],
     else:
         return None
 
-# ============================================================================
-# ТЕСТУВАННЯ ТА ДЕМОНСТРАЦІЯ
-# ============================================================================
+
+#ДЕМОНСТРАЦІЯ
+
 
 def main():
     print("=" * 70)
