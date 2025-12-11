@@ -210,7 +210,32 @@ def _test_all():
     c, sig2 = send_key(privA, pubB)
     k, ok = receive_key(privB, pubA, c, sig2)
     print(f"Отримано ключ k = {k}, Підпис валідний? {ok}")
+    
+def hex_to_int(s: str) -> int:
+    """Перетворює hex-рядок у int"""
+    return int(s.replace(" ", "").replace("\n", ""), 16)
+
+def test_external_data():
+    print("\n=== Тест даних із сайту ===")
+    
+    modulus_hex = "91B5E8342B2E35A9B66CD3E7AF68E61A78CB18F0E68B79D0DB11A8361D0EA091"
+    pubexp_hex = "10001"
+    ciphertext_hex = "24D92CA039EAFA65A946734D82613CCE3887297D94F92497CEE85209C2CDA11A"
+    signature_hex = "580C9D78B7151488304E2867EB2D4151B03277480C4D3E4B461C88154CB0D262"
+    message = b"Kitty"
+
+    n = hex_to_int(modulus_hex)
+    e = hex_to_int(pubexp_hex)
+    c = hex_to_int(ciphertext_hex)
+    sig = hex_to_int(signature_hex)
+
+    pub = (e, n)
+    
+    valid = verify(message, sig, pub)
+    print(f"Перевірка підпису: {valid}")
 
 if __name__ == "__main__":
     _test_all()
+    test_external_data()
+
 
