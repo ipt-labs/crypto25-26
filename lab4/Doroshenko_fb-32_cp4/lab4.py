@@ -143,14 +143,14 @@ def generate_rsa_primes():
 
     return p, q, p1, q1
 
-# Демонстрація роботи
-# try:
-#     p_A, q_A, p1_B, q1_B = generate_rsa_primes()
-#     print("\n--- Результати генерації 2 завдання ---")
-#     print(f"Абонент А: p={p_A}, q={q_A}, n={p_A*q_A}")
-#     print(f"Абонент В: p1={p1_B}, q1={q1_B}, n1={p1_B*q1_B}")
-# except Exception as e:
-#     print(f"Виникла помилка: {e}")
+# Демонстрація роботи 2 завдання
+try:
+    p_A, q_A, p1_B, q1_B = generate_rsa_primes()
+    print("\n--- Результати 2 завдання ---")
+    print(f"Абонент А: p={p_A}, q={q_A}, n={p_A*q_A}")
+    print(f"Абонент В: p1={p1_B}, q1={q1_B}, n1={p1_B*q1_B}")
+except Exception as e:
+    print(f"Виникла помилка: {e}")
 
 '''
 Завдання 3: Генерація ключових пар для RSA
@@ -200,10 +200,104 @@ def GenerateKeyPair(p, q):
 
     return public_key, private_key
 
-# Демонстрація роботи
-# PK_A, SK_A = GenerateKeyPair(p_A, q_A)
-# PK_B, SK_B = GenerateKeyPair(p1_B, q1_B)
-# print("\n----------------------------------------------")
-# print("\n--- Результати генерації 3 завдання ---")
-# print(f"Ключі А: PK={PK_A}, SK={SK_A}")
-# print(f"Ключі В: PK={PK_B}, SK={SK_B}")
+# Демонстрація роботи 3 завдання
+PK_A, SK_A = GenerateKeyPair(p_A, q_A)
+PK_B, SK_B = GenerateKeyPair(p1_B, q1_B)
+print("\n----------------------------------------------")
+print("\n--- Результати 3 завдання ---")
+print(f"Ключі А: PK={PK_A}, SK={SK_A}")
+print(f"Ключі В: PK={PK_B}, SK={SK_B}")
+
+'''
+Завдання 4: Шифрування, Розшифрування та Цифровий підпис RSA
+'''
+
+import hashlib
+import random
+
+# Імітація геш-функції H(M) = m.
+def hash_message(M):
+    # Перетворення повідомлення M на байти і обчислюємо SHA-256
+    if isinstance(M, str):
+        M_bytes = M.encode('utf-8')
+    elif isinstance(M, int):
+        M_bytes = M.to_bytes((M.bit_length() + 7) // 8, byteorder='big')
+    else:
+        raise TypeError("Повідомлення повинно бути рядком або цілим числом.")
+
+    hash_digest = hashlib.sha256(M_bytes).digest()
+
+    return int.from_bytes(hash_digest, byteorder='big')
+
+# Шифрування повідомлення M за допомогою відкритого ключа (n, e).
+def Encrypt(M, public_key):
+    n, e = public_key
+    if M >= n:
+        raise ValueError("Повідомлення M повинно бути менше за модуль n.")
+
+    C = modular_exponentiation(M, e, n)
+    return C
+
+# Розшифрування криптограми C за допомогою секретного ключа (d, p, q).
+def Decrypt(C, private_key):
+    d, p, q = private_key
+    n = p * q
+
+    M = modular_exponentiation(C, d, n)
+    return M
+
+# Створення цифрового підпису S для повідомлення M.
+def Sign(M, private_key):
+    d, p, q = private_key
+    n = p * q
+
+    # 1. Обчислення геш повідомлення
+    m = hash_message(M)
+    m_mod_n = m % n
+
+    # 2. Шифрування геш на секретному ключі
+    S = modular_exponentiation(m_mod_n, d, n)
+    return S
+
+# Перевірка цифрового підпису S для повідомлення M.
+def Verify(M, S, public_key):
+    n, e = public_key
+
+    # 1. Розшифрування підписа за допомогою відкритого ключа
+    m_prime = modular_exponentiation(S, e, n)
+
+    # 2. Обчислення очікуваного геш повідомлення
+    m = hash_message(M)
+    m_mod_n = m % n
+
+    is_valid = m_prime == m_mod_n
+
+    return is_valid, m_prime, m_mod_n
+
+# Демонстрація роботи 4 завдання
+print("\n----------------------------------------------")
+print("\n--- Результати 4 завдання ---")
+M_INT = 123456789012345
+M_STR = "Абонент А підписує це повідомлення."
+
+# Шифрування/Розшифрування (А -> В)
+print("\n--- Шифрування та Розшифрування ---")
+C_to_B = Encrypt(M_INT, PK_B)
+M_decrypted = Decrypt(C_to_B, SK_B)
+print(f"ВТ (M): {M_INT}")
+print(f"ШТ (C): {C_to_B}")
+print(f"Розшифр. M': {M_decrypted}")
+print(f"Перевірка розшифр.: {M_decrypted == M_INT}")
+
+# Цифровий Підпис (А)
+print("\n--- Цифровий Підпис та Перевірка (Абонент А) ---")
+m_hash = hash_message(M_STR) % PK_A[0]
+S_A = Sign(M_STR, SK_A)
+
+is_valid_A, m_prime_A, m_A = Verify(M_STR, S_A, PK_A)
+
+print(f"Повідомлення (M): '{M_STR}'")
+print(f"Геш H(M) mod n: {m_A}")
+print(f"Підпис (S): {S_A}")
+print(f"Відновлений Геш (S^e mod n): {m_prime_A}")
+print(f"Перевірка підпису: {is_valid_A}")
