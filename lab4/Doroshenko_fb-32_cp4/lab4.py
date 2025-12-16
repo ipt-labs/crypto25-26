@@ -301,3 +301,64 @@ print(f"Геш H(M) mod n: {m_A}")
 print(f"Підпис (S): {S_A}")
 print(f"Відновлений Геш (S^e mod n): {m_prime_A}")
 print(f"Перевірка підпису: {is_valid_A}")
+
+'''
+Завдання 5: Протокол конфіденційного розсилання ключів
+'''
+
+# Абонент А відправляє ключ k абоненту В.
+def SendKey(k, private_key_A, public_key_B):
+    d, p, q = private_key_A
+    n = p * q
+    n1, e1 = public_key_B
+
+    if n1 < n:
+        raise ValueError("Умова n1 >= n не виконана. Потрібна повторна генерація ключів.")
+
+    # Обчислення підпису S: S = k^d mod n
+    S = modular_exponentiation(k, d, n)
+
+    # Шифрування ключа k: k1 = k^e1 mod n1
+    k1 = modular_exponentiation(k, e1, n1)
+
+    # Шифрування підпису S: S1 = S^e1 mod n1
+    S1 = modular_exponentiation(S, e1, n1)
+
+    return k1, S1, S
+
+# Абонент В отримує та перевіряє ключ k від абонента А.
+def ReceiveKey(k1, S1, private_key_B, public_key_A):
+    d1, p1, q1 = private_key_B
+    n1 = p1 * q1
+    n, e = public_key_A
+
+    # Розшифрування ключа k: k = k1^d1 mod n1  (Конфіденційність)
+    k = modular_exponentiation(k1, d1, n1)
+
+    # Розшифрування підпису S: S = S1^d1 mod n1
+    S = modular_exponentiation(S1, d1, n1)
+
+    # Перевірка підпису А: k_check = S^e mod n  (Автентифікація)
+    k_check = modular_exponentiation(S, e, n)
+
+    is_authenticated = (k_check == k)
+
+    return k, is_authenticated, k_check, S
+
+# Демонстрація роботи 5 завдання
+print("\n----------------------------------------------")
+print("\n--- Результати 5 завдання ---")
+n_A = PK_A[0]
+k_secret = random.randint(100, n_A - 1)
+
+# Абонент А відправляє ключ
+k1_A_to_B, S1_A_to_B, S_A_raw = SendKey(k_secret, SK_A, PK_B)
+print(f"А (Відправник) генерує: k={k_secret}, S={S_A_raw}")
+print(f"А відправляє: k1={k1_A_to_B}, S1={S1_A_to_B}")
+
+# Абонент В приймає ключ
+k_received, is_auth, k_check, S_received = ReceiveKey(k1_A_to_B, S1_A_to_B, SK_B, PK_A)
+
+print(f"В (Отримувач) розшифровує: k={k_received}, S={S_received}")
+print(f"В перевіряє підпис (S^e mod n): k_check={k_check}")
+print(f"Автентифікація успішна: {is_auth}. Ключ відновлено: {k_received == k_secret}")
