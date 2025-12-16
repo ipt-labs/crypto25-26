@@ -104,3 +104,50 @@ def find_prime(bit_length):
         num -= 2
 
     raise Exception("Не вдалося знайти просте число в заданому інтервалі.")
+
+'''
+Завдання 1: Пошук випадкового простого числа
+'''
+
+# Визначення необхідної довжини в бітах
+PRIME_BIT_LENGTH = 256
+
+# Генерація двох пар простих чисел (p, q) та (p1, q1) для RSA.
+def generate_rsa_primes():
+    print(f"Генерація простого числа p (довжина {PRIME_BIT_LENGTH} біт)...")
+    p = find_prime(PRIME_BIT_LENGTH)
+    print(f"Знайдено p: {p}")
+
+    print(f"Генерація простого числа q (довжина {PRIME_BIT_LENGTH} біт)...")
+    q = find_prime(PRIME_BIT_LENGTH)
+    print(f"Знайдено q: {q}")
+
+    n = p * q
+
+    p1, q1, n1 = 0, 0, 0
+
+    while n1 < n:
+        print("\nГенерація простих чисел для Абонента В...")
+
+        p1 = find_prime(PRIME_BIT_LENGTH)
+        q1 = find_prime(PRIME_BIT_LENGTH)
+        n1 = p1 * q1
+
+        if n1 < n:
+            print(f"n1 ({n1}) < n ({n}). Повторна генерація p1, q1.")
+
+    print(f"Знайдено p1: {p1}")
+    print(f"Знайдено q1: {q1}")
+
+    print(f"\nПеревірка умови pq <= p1q1: {n} <= {n1} -> {n <= n1}")
+
+    return p, q, p1, q1
+
+# Демонстрація роботи
+# try:
+#     p_A, q_A, p1_B, q1_B = generate_rsa_primes()
+#     print("\n--- Результати генерації ---")
+#     print(f"Абонент А: p={p_A}, q={q_A}, n={p_A*q_A}")
+#     print(f"Абонент В: p1={p1_B}, q1={q1_B}, n1={p1_B*q1_B}")
+# except Exception as e:
+#     print(f"Виникла помилка: {e}")
