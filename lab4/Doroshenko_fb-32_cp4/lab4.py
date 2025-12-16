@@ -106,7 +106,7 @@ def find_prime(bit_length):
     raise Exception("Не вдалося знайти просте число в заданому інтервалі.")
 
 '''
-Завдання 1: Пошук випадкового простого числа
+Завдання 2: Генерація простих чисел
 '''
 
 # Визначення необхідної довжини в бітах
@@ -146,8 +146,64 @@ def generate_rsa_primes():
 # Демонстрація роботи
 # try:
 #     p_A, q_A, p1_B, q1_B = generate_rsa_primes()
-#     print("\n--- Результати генерації ---")
+#     print("\n--- Результати генерації 2 завдання ---")
 #     print(f"Абонент А: p={p_A}, q={q_A}, n={p_A*q_A}")
 #     print(f"Абонент В: p1={p1_B}, q1={q1_B}, n1={p1_B*q1_B}")
 # except Exception as e:
 #     print(f"Виникла помилка: {e}")
+
+'''
+Завдання 3: Генерація ключових пар для RSA
+'''
+
+# Розширений алгоритм Евкліда.
+def extended_gcd(a, b):
+    if a == 0:
+        return b, 0, 1
+
+    gcd, x1, y1 = extended_gcd(b % a, a)
+
+    x = y1 - (b // a) * x1
+    y = x1
+
+    return gcd, x, y
+
+# Знаходження оберненого елемент d до e за модулем phi_n.
+def inverse_mod(e, phi_n):
+    gcd, x, y = extended_gcd(e, phi_n)
+
+    if gcd != 1:
+        raise Exception("Обернений елемент не існує. e та phi(n) не взаємно прості.")
+    else:
+        return x % phi_n
+
+# Генерує ключову пару RSA для заданих простих чисел p і q.
+def GenerateKeyPair(p, q):
+    if p == q:
+        raise Exception("Числа p та q не можуть співпадати у схемі RSA.")
+
+    n = p * q
+    phi_n = (p - 1) * (q - 1)
+
+    # Вибір e. Рекомендоване значення e = 2^16 + 1 (65537)
+    e = 65537
+
+    gcd_val, _, _ = extended_gcd(e, phi_n)
+
+    if gcd_val != 1:
+        raise Exception(f"Обране e={e} не є взаємно простим з phi(n)={phi_n}. gcd={gcd_val}")
+
+    d = inverse_mod(e, phi_n)
+
+    public_key = (n, e)
+    private_key = (d, p, q)
+
+    return public_key, private_key
+
+# Демонстрація роботи
+# PK_A, SK_A = GenerateKeyPair(p_A, q_A)
+# PK_B, SK_B = GenerateKeyPair(p1_B, q1_B)
+# print("\n----------------------------------------------")
+# print("\n--- Результати генерації 3 завдання ---")
+# print(f"Ключі А: PK={PK_A}, SK={SK_A}")
+# print(f"Ключі В: PK={PK_B}, SK={SK_B}")
