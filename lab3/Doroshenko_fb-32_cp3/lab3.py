@@ -62,7 +62,7 @@ except Exception as e:
 import collections
 
 
-ALPHABET = "абвгдежзийклмнопрстуфхцчшщыьэюя"
+ALPHABET = "абвгдежзийклмнопрстуфхцчшщьыэюя"
 M = len(ALPHABET)
 CHAR_TO_INDEX = {char: idx for idx, char in enumerate(ALPHABET)}
 
