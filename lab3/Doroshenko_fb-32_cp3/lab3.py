@@ -174,7 +174,7 @@ def generate_keys_from_top5(top_5_indices):
     return list(found_keys)
 
 # Перевірка роботи 3 завдання
-if __name__ == "__main__":
+try:
     print("\n--- Перевірка 3 завдання ---")
 
     print("Починаємо перебір варіантів...")
@@ -184,3 +184,93 @@ if __name__ == "__main__":
     print("    Кандидати на ключ (a, b):")
     for k in candidates:
         print(f"    {k}")
+
+except Exception as e:
+    print(f"ПОМИЛКА Завдання 3: {e}")
+
+'''
+Завдання 4: Дешифрування та Фільтрація
+'''
+
+# Дешифрує послідовність індексів біграм.
+def decrypt_affine(cipher_indices, a, b):
+    a_inv = mod_inverse(a, M2)
+    if a_inv is None:
+        return None
+
+    plaintext = []
+    for Y in cipher_indices:
+        X = (a_inv * (Y - b)) % M2
+
+        idx1 = X // M
+        idx2 = X % M
+
+        plaintext.append(ALPHABET[idx1] + ALPHABET[idx2])
+
+    return "".join(plaintext)
+
+# Евристична оцінка тексту
+def score_text(text):
+    forbidden = [
+        "аь", "оь", "еь", "уь", "иь", "ыь", "юь", "яь",
+        "ьь", "ьъ", "йй", "цщ", "щщ", "ъь"
+    ]
+    for bad in forbidden:
+        if bad in text:
+            return -1000
+
+    common_parts = ["то", "на", "не", "по", "ра", "но", "ст", "ен"]
+    score = 0
+    for part in common_parts:
+        score += text.count(part)
+
+    return score
+
+
+# Перевірка роботи 4 завдання
+try:
+    print("\n--- Перевірка 4 завдання ---")
+
+    best_score = -1
+    best_key = None
+    best_text = ""
+
+    for idx, (a, b) in enumerate(candidates, 1):
+        snippet = decrypt_affine(cipher_indices[:300], a, b)
+        if snippet is None:
+            continue
+
+        current_score = score_text(snippet)
+
+        if current_score > best_score:
+            best_score = current_score
+            best_key = (a, b)
+            best_text = snippet
+
+            print(f"Кандидат #{idx}")
+            print(f"    a = {a}")
+            print(f"    b = {b}")
+            print(f"    Оцінка = {current_score}")
+            print(f"    Уривок: {snippet[:80]}")
+
+    if best_key:
+        a, b = best_key
+        print("\nНАЙКРАЩИЙ КЛЮЧ")
+        print(f"a = {a}, b = {b}")
+        print(f"Оцінка: {best_score}")
+
+        full_text = decrypt_affine(cipher_indices, a, b)
+
+        output_file = f"lab3/Doroshenko_fb-32_cp3/decrypted_key_{a}_{b}.txt"
+        with open(output_file, "w", encoding="utf-8") as f:
+            f.write(full_text)
+
+        print(f"Дешифрований текст збережено у файл: {output_file}")
+        print("\nПочаток дешифрованого тексту:")
+        print(full_text[:300])
+
+    else:
+        print("Читабельний текст не знайдено.")
+
+except Exception as e:
+    print(f"ПОМИЛКА Завдання 4: {e}")
