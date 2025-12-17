@@ -118,3 +118,69 @@ try:
 
 except Exception as e:
     print(f"ПОМИЛКА Завдання 2: {e}")
+
+'''
+Завдання 3: Пошук кандидатів на ключ
+'''
+
+M2 = M * M
+
+# Генерує список кандидатів (a, b)
+def generate_keys_from_top5(top_5_indices):
+    # Найчастіші біграми мови
+    top_lang_str = ["ст", "но", "то", "на", "ен"]
+
+    # Переводимо їх у числа X
+    top_lang_indices = []
+    for s in top_lang_str:
+        idx = CHAR_TO_INDEX[s[0]] * M + CHAR_TO_INDEX[s[1]]
+        top_lang_indices.append(idx)
+
+    print(f"Топ-5 біграм мови (X): {top_lang_indices}")
+    print(f"Топ-5 біграм шифртексту (Y): {top_5_indices}")
+
+    found_keys = set()
+
+    # Перебір пар біграм мови (X1, X2)
+    for i in range(len(top_lang_indices)):
+        for j in range(len(top_lang_indices)):
+            if i == j: continue
+
+            X1 = top_lang_indices[i]
+            X2 = top_lang_indices[j]
+
+            # Перебір пар біграм шифртексту (Y1, Y2)
+            for k in range(len(top_5_indices)):
+                for l in range(len(top_5_indices)):
+                    if k == l: continue
+
+                    Y1 = top_5_indices[k]
+                    Y2 = top_5_indices[l]
+
+                    # Розв'язання рівняння: a * (X1 - X2) = (Y1 - Y2) mod m^2
+                    diff_X = (X1 - X2) % M2
+                    diff_Y = (Y1 - Y2) % M2
+
+                    candidates_a = solve_linear_congruence(diff_X, diff_Y, M2)
+
+                    for a in candidates_a:
+                        if extended_gcd(a, M)[0] != 1:
+                            continue
+
+                        # Знаходження b: b = Y1 - a*X1 mod m^2
+                        b = (Y1 - a * X1) % M2
+                        found_keys.add((a, b))
+
+    return list(found_keys)
+
+# Перевірка роботи 3 завдання
+if __name__ == "__main__":
+    print("\n--- Перевірка 3 завдання ---")
+
+    print("Починаємо перебір варіантів...")
+    candidates = generate_keys_from_top5(top_5_indices)
+
+    print(f"\nЗгенеровано унікальних ключів: {len(candidates)}")
+    print("    Кандидати на ключ (a, b):")
+    for k in candidates:
+        print(f"    {k}")
