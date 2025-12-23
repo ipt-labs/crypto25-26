@@ -6,17 +6,20 @@
 def extended_gcd(a, b):
     if a == 0:
         return b, 0, 1
-    else:
-        g, y, x = extended_gcd(b % a, a)
-        return g, x - (b // a) * y, y
 
-# Знаходження оберненого елемента a^(-1) за модулем m.
-def mod_inverse(a, m):
-    g, x, y = extended_gcd(a, m)
-    if g != 1:
-        return None
-    else:
-        return x % m
+    gcd, x1, y1 = extended_gcd(b % a, a)
+
+    x = y1 - (b // a) * x1
+    y = x1
+
+    return gcd, x, y
+
+# Знаходження оберненого елемент d до e за модулем phi_n.
+def inverse_mod(a, m):
+    gcd, x, _ = extended_gcd(a, m)
+    if gcd != 1:
+        raise Exception("Обернений елемент не існує, оскільки gcd(a, m) ≠ 1")
+    return x % m
 
 # Розв'язання лінійного порівняння: ax ≡ b (mod n).
 def solve_linear_congruence(a, b, n):
@@ -41,7 +44,7 @@ try:
     # Тест 1: Обернений елемент
     a = 3
     m = 11
-    inv = mod_inverse(a, m)
+    inv = inverse_mod(a, m)
 
     print(f"Обернений елемент до {a} по модулю {m} = {inv}")
 
@@ -194,7 +197,7 @@ except Exception as e:
 
 # Дешифрує послідовність індексів біграм.
 def decrypt_affine(cipher_indices, a, b):
-    a_inv = mod_inverse(a, M2)
+    a_inv = inverse_mod(a, M2)
     if a_inv is None:
         return None
 
