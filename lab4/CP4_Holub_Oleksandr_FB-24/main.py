@@ -1,5 +1,4 @@
 import random
-#random.seed(43)
 def euclidean(a, b):
     while b:
         a, b = b, a % b

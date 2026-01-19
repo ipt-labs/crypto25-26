@@ -44,7 +44,7 @@ def create_csv_file(filename: str, affinity_dict: dict):
 
 
 def main():
-    text: str = file_read('09.txt')
+    text: str = file_read('C:\\Users\\Олександр\\Desktop\\CP2_Holub_Oleksandr_FB-24\\ext.txt')
     affinity_dict: dict = {}
     for i in range(2, 51):
         key = key_generate(i)
